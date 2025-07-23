@@ -1,12 +1,12 @@
 <template>
-  <div class="w-full space-y-8">
+  <div class="w-full max-w-2xl space-y-8 mx-auto">
     <div>
       <h2 class="text-2xl font-bold text-center">
         What is your
         <span class="text-blue-500">primary</span> and
         <span class="text-pink-500">secondary</span> fitness goal?
       </h2>
-      <p class="text-center text-sm text-gray-400 mt-2">(Pick 1–2)</p>
+      <p class="text-center text-sm text-[#a2a9b0] mt-2">(Select 1–2)</p>
     </div>
 
     <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
@@ -22,7 +22,7 @@
             : [
                 'text-gray-300 border-gray-600',
                 hoverBorderClass,
-                (!isSelected(option) && isMaxSelected) ? 'opacity-50 cursor-not-allowed' : ''
+                (!isSelected(option) && isMaxSelected) ? 'opacity-50' : ''
               ]
         ]"
       >
