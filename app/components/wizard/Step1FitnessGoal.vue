@@ -3,8 +3,8 @@
     <div>
       <h2 class="text-2xl font-bold text-center">
         What is your
-        <span class="text-blue-500">primary</span> and
-        <span class="text-pink-500">secondary</span> fitness goal?
+        <span class="text-blue-300">primary</span> and
+        <span class="text-pink-300">secondary</span> fitness goal?
       </h2>
       <p class="text-center text-sm text-[#a2a9b0] mt-2">(Select 1–2)</p>
     </div>
