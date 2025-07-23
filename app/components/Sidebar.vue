@@ -89,6 +89,7 @@ const lockedOpen = ref(false)
 
 const toggleLock = () => {
   lockedOpen.value = !lockedOpen.value
+  hovering.value = false
 }
 
 const isExpanded = computed(() => hovering.value || lockedOpen.value)
