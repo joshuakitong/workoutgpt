@@ -9,4 +9,5 @@
 
 <script setup>
 import Sidebar from '~/components/Sidebar.vue'
+useHead({ title: 'WorkoutGPT' })
 </script>
