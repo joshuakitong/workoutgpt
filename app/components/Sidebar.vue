@@ -30,7 +30,7 @@
       <NuxtLink
         to="/"
         class="flex items-center gap-3 p-3 rounded-full text-[#a2a9b0] hover:text-blue-500 transition"
-        exact-active-class="text-blue-500"
+        exact-active-class="text-blue-500 cursor-default"
       >
         <!-- Plus Icon -->
         <svg
@@ -56,7 +56,7 @@
       <NuxtLink
         to="/workouts"
         class="flex items-center gap-3 p-3 rounded-full text-[#a2a9b0] hover:text-blue-500 transition"
-        active-class="text-blue-500"
+        active-class="text-blue-500 cursor-default"
       >
         <!-- Heart Icon -->
         <svg
