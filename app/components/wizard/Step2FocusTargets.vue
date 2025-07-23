@@ -44,33 +44,43 @@ const secondaryOptions = computed(() => focusTargets[form.value.secondaryGoal] |
 
 const combinedOptions = computed(() => {
   const all = [...primaryOptions.value, ...secondaryOptions.value]
-  return [...new Set(all)]
+  return [...new Set(all)].sort()
 })
 
-const toggleTarget = (target) => {
-  const index = form.value.targets.indexOf(target)
+const toggleTarget = (option) => {
+  const index = form.value.targets.indexOf(option)
   if (index > -1) {
     form.value.targets.splice(index, 1)
   } else {
-    form.value.targets.push(target)
+    form.value.targets.push(option)
   }
 }
 
-const isSelected = (target) => form.value.targets.includes(target)
+const isSelected = (option) => form.value.targets.includes(option)
 
-const selectedClass = (target) => {
-  if (primaryOptions.value.includes(target)) {
+const selectedClass = (option) => {
+  const inPrimary = primaryOptions.value.includes(option)
+  const inSecondary = secondaryOptions.value.includes(option)
+
+  if (inPrimary && inSecondary) {
+    return 'bg-purple-500 text-white border-purple-500'
+  } else if (inPrimary) {
     return 'bg-blue-500 text-white border-blue-500'
-  } else if (secondaryOptions.value.includes(target)) {
+  } else if (inSecondary) {
     return 'bg-pink-500 text-white border-pink-500'
   }
   return ''
 }
 
 const hoverClass = (option) => {
-  if (primaryOptions.value.includes(option)) {
+  const inPrimary = primaryOptions.value.includes(option)
+  const inSecondary = secondaryOptions.value.includes(option)
+
+  if (inPrimary && inSecondary) {
+    return 'hover:border-purple-500 hover:text-white'
+  } else if (inPrimary) {
     return 'hover:border-blue-500 hover:text-white'
-  } else if (secondaryOptions.value.includes(option)) {
+  } else if (inSecondary) {
     return 'hover:border-pink-500 hover:text-white'
   }
   return 'hover:border-gray-400 hover:text-white'
