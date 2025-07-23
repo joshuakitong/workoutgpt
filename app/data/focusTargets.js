@@ -2,9 +2,8 @@ export default {
   Strength: [
     'Chest',
     'Back',
-    'Biceps',
-    'Triceps',
     'Shoulders',
+    'Arms',
     'Legs',
     'Core'
   ],
