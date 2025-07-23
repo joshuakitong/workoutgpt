@@ -2,7 +2,7 @@
 
 This is an AI workout generator built with **Nuxt.js**, **Tailwind CSS**, **GSAP**, the **Gemini API**, **Firebase Firestore** and **Authentication**.
 
-Live: [View Site](https://joshuakitong.github.io/workoutgpt/)
+Live: [View Site](https://workoutgpt-2d445.web.app)
 
 <details>
   <summary><strong>How to Run Locally</strong></summary>
