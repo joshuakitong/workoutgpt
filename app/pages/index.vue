@@ -53,12 +53,12 @@
 <script setup>
 import { ref, reactive, computed } from 'vue'
 
-import Step1 from '@/components/wizard/Step1.vue'
-import Step2 from '@/components/wizard/Step2.vue'
-import Step3 from '@/components/wizard/Step3.vue'
-import Step4 from '@/components/wizard/Step4.vue'
-import Step5 from '@/components/wizard/Step5.vue'
-import Step6 from '@/components/wizard/Step6.vue'
+import Step1 from '~/components/wizard/Step1FitnessGoal.vue'
+import Step2 from '~/components/wizard/Step2FocusTargets.vue'
+import Step3 from '~/components/wizard/Step3Equipment.vue'
+import Step4 from '~/components/wizard/Step4Duration.vue'
+import Step5 from '~/components/wizard/Step5ExperienceLevel.vue'
+import Step6 from '~/components/wizard/Step6Notes.vue'
 
 useHead({ title: 'WorkoutGPT' })
 
