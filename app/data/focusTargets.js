@@ -30,7 +30,7 @@ export default {
     'Wrists'
   ],
   Balance: [
-    'Core Stability',
+    'Core',
     'Single-leg',
     'Proprioception',
     'Vestibular',
