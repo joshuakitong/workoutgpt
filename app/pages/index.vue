@@ -41,7 +41,8 @@
           :disabled="!canContinue"
           class="px-5 py-2 rounded-full font-medium transition bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:brightness-110 text-white disabled:opacity-50 disabled:hover:brightness-100"
         >
-          Next
+          <span v-if="currentStep !== 5">Next</span>
+          <span v-else>Submit</span>
         </button>
       </div>
     </div>
@@ -77,7 +78,9 @@ const form = reactive({
 
 const nextStep = () => {
   if (currentStep.value < steps.length - 1) currentStep.value++
+  else if (currentStep.value === steps.length - 1) console.log(form) //submit form here
 }
+
 const prevStep = () => {
   if (currentStep.value > 0) currentStep.value--
 }
@@ -86,7 +89,9 @@ const canContinue = computed(() => {
   if (currentStep.value === 0) return !!form.primaryGoal
   else if (currentStep.value === 1) return form.targets.length > 0
   else if (currentStep.value === 2)  return form.equipment.length > 0
-  return false
+  else if (currentStep.value === 3)  return !!form.duration
+  else if (currentStep.value === 4)  return !!form.experience
+  return true
 })
 
 watch(
