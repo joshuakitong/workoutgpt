@@ -1,6 +1,6 @@
 # WorkoutGPT
 
-This is an AI workout generator built with **Nuxt.js**, **Tailwind CSS**, **GSAP**, the **Gemini API**, **Firebase Firestore** and **Authentication**.
+This is an AI workout generator built with **Nuxt.js**, **Tailwind CSS**, **GSAP**, the **Gemini API**, and **Firebase**, featuring an interactive form wizard, AI-generated workout plans, and persistent user data with Firestore.
 
 Live: [View Site](https://workoutgpt-2d445.web.app)
 
