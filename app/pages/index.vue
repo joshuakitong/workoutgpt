@@ -3,7 +3,7 @@
     <!-- Header -->
     <h1
       class="text-4xl font-bold bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent transition-all duration-500"
-      :class="started ? 'mx-auto mt-6 z-50 text-2xl' : 'mx-auto mt-[40vh]'"
+      :class="started ? 'mx-auto my-6 z-50 text-2xl' : 'mx-auto mt-[40vh]'"
     >
       WorkoutGPT
     </h1>
@@ -26,7 +26,7 @@
       </div>
 
       <!-- Bottom Nav Buttons -->
-      <div class="flex justify-between mt-6 w-full max-w-2xl">
+      <div class="flex justify-between my-6 w-full max-w-2xl">
         <button
           @click="prevStep"
           :disabled="currentStep === 0"
@@ -50,7 +50,9 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, watch } from 'vue'
+import focusTargets from '~/data/focusTargets.js'
+import equipmentOptions from '~/data/equipmentOptions.js'
 
 import Step1 from '~/components/wizard/Step1FitnessGoal.vue'
 import Step2 from '~/components/wizard/Step2FocusTargets.vue'
@@ -67,7 +69,7 @@ const form = reactive({
   primaryGoal: '',
   secondaryGoal: '',
   targets: [],
-  equipment: [],
+  equipment: ['Bodyweight'],
   duration: '',
   experience: '',
   notes: ''
@@ -83,6 +85,29 @@ const prevStep = () => {
 const canContinue = computed(() => {
   if (currentStep.value === 0) return !!form.primaryGoal
   else if (currentStep.value === 1) return form.targets.length > 0
+  else if (currentStep.value === 2)  return form.equipment.length > 0
   return false
 })
+
+watch(
+  () => [form.primaryGoal, form.secondaryGoal],
+  ([primary, secondary]) => {
+    const allowedTargets = new Set([
+      ...(focusTargets[primary] || []),
+      ...(focusTargets[secondary] || []),
+    ])
+    form.targets = form.targets.filter((target) => allowedTargets.has(target))
+
+    const allowedEquipment = new Set([
+      ...(equipmentOptions[primary] || []),
+      ...(equipmentOptions[secondary] || []),
+    ])
+    form.equipment = form.equipment.filter((item) => allowedEquipment.has(item))
+
+    if (primary) {
+      form.equipment.unshift('Bodyweight')
+    }
+  },
+  { immediate: true }
+)
 </script>
