@@ -19,21 +19,19 @@
     </div>
 
     <!-- Form Wizard -->
-    <div v-if="started" class="flex flex-col justify-between min-h-[calc(100vh-6rem)] max-w-2xl mx-auto px-4">
+    <div v-if="started" class="flex flex-col justify-between min-h-[calc(100vh-6rem)] items-center px-4">
       <!-- Step Content -->
-      <div class="flex-1 flex items-center justify-center">
-        <div class="w-full">
-          <component :is="steps[currentStep]" v-model:form="form" />
-        </div>
+      <div class="flex-1 flex items-center justify-center w-full max-w-2xl">
+        <component :is="steps[currentStep]" v-model:form="form" />
       </div>
 
       <!-- Bottom Nav Buttons -->
-      <div class="flex justify-between mt-6">
+      <div class="flex justify-between mt-6 w-full max-w-2xl">
         <button
           @click="prevStep"
           :disabled="currentStep === 0"
           :hidden="currentStep === 0"
-          class="px-5 py-2 rounded-full font-medium transition border border-gray-600 text-gray-300 hover:bg-gray-700 disabled:opacity-50"
+          class="px-5 py-2 rounded-full font-medium transition text-[#a2a9b0] hover:bg-[#353739] disabled:opacity-50"
         >
           Previous
         </button>
@@ -47,6 +45,7 @@
         </button>
       </div>
     </div>
+
   </div>
 </template>
 
@@ -60,8 +59,6 @@ import Step4 from '~/components/wizard/Step4Duration.vue'
 import Step5 from '~/components/wizard/Step5ExperienceLevel.vue'
 import Step6 from '~/components/wizard/Step6Notes.vue'
 
-useHead({ title: 'WorkoutGPT' })
-
 const started = ref(false)
 const currentStep = ref(0)
 const steps = [Step1, Step2, Step3, Step4, Step5, Step6]
@@ -69,11 +66,11 @@ const steps = [Step1, Step2, Step3, Step4, Step5, Step6]
 const form = reactive({
   primaryGoal: '',
   secondaryGoal: '',
-  focus: '',
+  targets: [],
   equipment: [],
   duration: '',
   experience: '',
-  notes: '',
+  notes: ''
 })
 
 const nextStep = () => {
@@ -85,6 +82,7 @@ const prevStep = () => {
 
 const canContinue = computed(() => {
   if (currentStep.value === 0) return !!form.primaryGoal
-  return true
+  else if (currentStep.value === 1) return form.targets.length > 0
+  return false
 })
 </script>
