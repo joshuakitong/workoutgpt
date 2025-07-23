@@ -5,7 +5,7 @@
       <p class="text-center text-sm text-[#a2a9b0] mt-2">(Select one)</p>
     </div>
 
-    <div class="grid grid-cols-3 sm:grid-cols-4 gap-4">
+    <div class="grid grid-cols-3 sm:grid-cols-3 gap-4">
       <button
         v-for="option in options"
         :key="option"
@@ -20,28 +20,15 @@
         {{ option }}
       </button>
     </div>
-
-    <div v-if="form.duration === 'custom'">
-      <input
-        v-model="form.customDuration"
-        type="number"
-        min="5"
-        placeholder="Enter duration in minutes"
-        class="w-full mt-4 px-4 py-2 bg-[#1e1e1e] text-white border border-gray-600 rounded focus:outline-none focus:border-blue-500"
-      />
-    </div>
   </div>
 </template>
 
 <script setup>
 const props = defineProps({ form: Object })
 
-const options = ['15m', '30m', '45m', '60m', '90m', '120m', 'custom']
+const options = ['15m', '30m', '45m', '60m', '90m', '120m']
 
 const selectDuration = (value) => {
   props.form.duration = value
-  if (value !== 'custom') {
-    props.form.customDuration = ''
-  }
 }
 </script>
