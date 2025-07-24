@@ -7,6 +7,7 @@ You are a fitness coach. Based on the user's preferences, generate a one-session
   'goals': ['Strength', 'Cardiovascular'],
   'duration': '45m',
   'experience': 'Beginner',
+  'targets': ['Arms', 'Stamina'],
   'equipment': ['Bodyweight', 'Dumbbells'],
   'segments': [
     {
