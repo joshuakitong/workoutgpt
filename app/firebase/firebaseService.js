@@ -2,35 +2,62 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
 export const useWorkoutStore = defineStore('workout', () => {
-  const currentWorkout = ref(loadCurrentWorkout())
-  const workouts = ref(loadWorkoutList())
+  const currentWorkout = ref(null)
+  const workouts = ref([])
+
+  if (typeof window !== 'undefined') {
+    currentWorkout.value = loadCurrentWorkout()
+    workouts.value = loadWorkoutList()
+  }
 
   function setCurrentWorkout(workout) {
     currentWorkout.value = workout
-    saveCurrentWorkout(workout)
+    if (typeof window !== 'undefined') {
+      saveCurrentWorkout(workout)
+    }
   }
 
   function addWorkout(workout) {
     workouts.value.push(workout)
-    saveWorkoutList(workouts.value)
+    if (typeof window !== 'undefined') {
+      saveWorkoutList(workouts.value)
+    }
   }
 
   function loadCurrentWorkout() {
-    const data = localStorage.getItem('currentWorkout')
-    return data ? JSON.parse(data) : null
+    try {
+      const data = localStorage.getItem('currentWorkout')
+      return data ? JSON.parse(data) : null
+    } catch (e) {
+      console.warn('Failed to load current workout:', e)
+      return null
+    }
   }
 
   function saveCurrentWorkout(data) {
-    localStorage.setItem('currentWorkout', JSON.stringify(data))
+    try {
+      localStorage.setItem('currentWorkout', JSON.stringify(data))
+    } catch (e) {
+      console.error('Failed to save current workout:', e)
+    }
   }
 
   function loadWorkoutList() {
-    const data = localStorage.getItem('workouts')
-    return data ? JSON.parse(data) : []
+    try {
+      const data = localStorage.getItem('workouts')
+      return data ? JSON.parse(data) : []
+    } catch (e) {
+      console.warn('Failed to load workout list:', e)
+      return []
+    }
   }
 
   function saveWorkoutList(data) {
-    localStorage.setItem('workouts', JSON.stringify(data))
+    try {
+      localStorage.setItem('workouts', JSON.stringify(data))
+    } catch (e) {
+      console.error('Failed to save workout list:', e)
+    }
   }
 
   return {

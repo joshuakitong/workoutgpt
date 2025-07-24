@@ -53,6 +53,7 @@
 <script setup>
 import { ref, reactive, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import { v4 as uuidv4 } from 'uuid'
 import focusTargets from '~/data/focusTargets.js'
 import equipmentOptions from '~/data/equipmentOptions.js'
 import { submitFormToGemini } from '@/utils/submitForm.js'
@@ -85,12 +86,19 @@ const nextStep = async () => {
     currentStep.value++
   } else {
     try {
-      const workout = await submitFormToGemini(form)
+      const generated = await submitFormToGemini(form)
+      const id = uuidv4()
+
+      const workout = {
+        ...generated,
+        id,
+        originalForm: { ...form }
+      }
 
       const store = useWorkoutStore()
       store.setCurrentWorkout(workout)
 
-      router.push('/workout')
+      router.push(`/workout/${id}`)
     } catch (err) {
       console.error('Submit failed:', err)
     }
