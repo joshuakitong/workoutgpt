@@ -52,8 +52,11 @@
 
 <script setup>
 import { ref, reactive, computed, watch } from 'vue'
+import { useRouter } from 'vue-router'
 import focusTargets from '~/data/focusTargets.js'
 import equipmentOptions from '~/data/equipmentOptions.js'
+import { submitFormToGemini } from '@/utils/submitForm.js'
+import { useWorkoutStore } from '@/firebase/firebaseService'
 
 import Step1 from '~/components/wizard/Step1FitnessGoal.vue'
 import Step2 from '~/components/wizard/Step2FocusTargets.vue'
@@ -65,6 +68,7 @@ import Step6 from '~/components/wizard/Step6Notes.vue'
 const started = ref(false)
 const currentStep = ref(0)
 const steps = [Step1, Step2, Step3, Step4, Step5, Step6]
+const router = useRouter()
 
 const form = reactive({
   primaryGoal: '',
@@ -76,9 +80,21 @@ const form = reactive({
   notes: ''
 })
 
-const nextStep = () => {
-  if (currentStep.value < steps.length - 1) currentStep.value++
-  else if (currentStep.value === steps.length - 1) console.log(form) //submit form here
+const nextStep = async () => {
+  if (currentStep.value < steps.length - 1) {
+    currentStep.value++
+  } else {
+    try {
+      const workout = await submitFormToGemini(form)
+
+      const store = useWorkoutStore()
+      store.setCurrentWorkout(workout)
+
+      router.push('/workout')
+    } catch (err) {
+      console.error('Submit failed:', err)
+    }
+  }
 }
 
 const prevStep = () => {
