@@ -44,7 +44,7 @@ You are a fitness coach. Based on the user's preferences, generate a one-session
       ]
     }
   ],
-  'notes': 'User notes if any'
+  'notes': 'Generate notes for workout plus response to user notes if applicable'
 }
 
 User Data:
