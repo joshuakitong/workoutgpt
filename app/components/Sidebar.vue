@@ -3,7 +3,7 @@
     @mouseenter="hovering = true"
     @mouseleave="hovering = false"
     :class="[
-      'sticky top-0 h-screen bg-[#282a2c] text-white transition-all duration-300 z-50',
+      'sticky top-0 min-h-[calc(100vh+6rem)] bg-[#282a2c] text-white transition-all duration-300 z-50',
       isExpanded ? 'w-72' : 'w-16'
     ]"
   >
