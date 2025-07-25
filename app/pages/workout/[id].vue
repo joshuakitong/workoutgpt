@@ -51,7 +51,7 @@
       </button>
 
       <button
-        @click="deleteWorkout"
+        @click="showDeleteModal = true"
         v-if="isSavedWorkout"
         class="px-5 py-2 rounded-full font-medium transition text-red-400 hover:bg-red-500 hover:text-white"
       >
@@ -80,13 +80,20 @@
       <p class="text-gray-400 text-center mt-20">No workout found. Please create one from the form first.</p>
     </div>
   </div>
+
+  <DeleteConfirmationModal
+    v-if="showDeleteModal"
+    @cancel="showDeleteModal = false"
+    @confirm="confirmDeleteWorkout"
+  />
 </template>
 
 <script setup>
 import { useRoute, useRouter } from 'vue-router'
 import { useWorkoutStore } from '@/firebase/firebaseService'
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, ref } from 'vue'
 import { submitFormToGemini } from '@/utils/submitForm'
+import DeleteConfirmationModal from '~/components/workout/deleteConfirmationModal.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -97,6 +104,7 @@ const workout = ref(null)
 const regenerating = ref(false)
 const hasRegenerated = ref(false)
 const isSavedWorkout = ref(false)
+const showDeleteModal = ref(false)
 
 onMounted(() => {
   const stored = store.workouts?.find(w => w.id === workoutId)
@@ -145,7 +153,7 @@ const saveWorkout = () => {
   alert('Workout saved!')
 }
 
-const deleteWorkout = () => {
+const confirmDeleteWorkout = () => {
   if (!workout.value) return
 
   store.deleteWorkout(workout.value.id)
