@@ -147,7 +147,6 @@ const regenerateWorkout = async () => {
     hasRegenerated.value = true
 
   } catch (err) {
-    alert('Regeneration failed.')
     console.error('Regeneration error:', err)
   } finally {
     regenerating.value = false
@@ -168,7 +167,6 @@ const saveWorkout = async () => {
 
   await store.saveWorkout(updatedWorkout)
   store.setCurrentWorkout(updatedWorkout)
-  alert('Workout saved!')
   router.push('/workouts')
 }
 
@@ -176,7 +174,6 @@ const confirmDeleteWorkout = () => {
   if (!workout.value) return
 
   store.deleteWorkout(workout.value.id)
-  alert('Workout deleted.')
   router.push('/workouts')
 }
 </script>
