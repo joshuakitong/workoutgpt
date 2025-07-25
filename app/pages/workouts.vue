@@ -1,6 +1,6 @@
 <template>
-  <div class="text-white p-6 max-w-2xl mx-auto">
-    <h1 class="text-3xl font-bold mb-6 text-center">My Workouts</h1>
+  <div class="text-white py-6 px-0 sm:px-6 max-w-64 sm:max-w-2xl mx-auto">
+    <h1 class="text-3xl font-bold mb-6">My Workouts</h1>
 
     <div v-if="workouts.length">
       <ul class="space-y-4">
@@ -53,6 +53,12 @@ const workouts = computed(() =>
 
 const formatDate = (isoDate) => {
   if (!isoDate) return ''
-  return new Date(isoDate).toLocaleString()
+  return new Date(isoDate).toLocaleString(undefined, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+  })
 }
 </script>

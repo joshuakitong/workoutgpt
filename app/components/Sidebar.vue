@@ -3,8 +3,8 @@
     @mouseenter="hovering = true"
     @mouseleave="hovering = false"
     :class="[
-      'sticky top-0 min-h-screen bg-[#282a2c] text-white transition-all duration-300 z-50',
-      isExpanded ? 'w-72' : 'w-16'
+      'fixed top-0 min-h-screen bg-[#282a2c] text-white transition-all duration-300 z-50',
+      isExpanded ? 'w-72' : 'w-16',
     ]"
   >
     <!-- Hamburger Icon -->
@@ -91,7 +91,7 @@
             class="flex items-center gap-3 py-3 px-2 rounded-full text-[#a2a9b0] hover:text-blue-500 transition"
             :class="{ 'text-blue-500 cursor-default': isWorkoutActive(w.id) }"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
             </svg>
             <span
@@ -123,10 +123,9 @@
         </div>
       </div>
     </nav>
-    
   </aside>
 
-  <div class="absolute top-4 right-4 z-50">
+  <div class="fixed bottom-3 left-3 md:top-3 md:right-3 md:bottom-auto md:left-auto z-50">
     <button
       v-if="!store.user"
       @click="signIn"
@@ -145,7 +144,7 @@
         />
       </button>
       <div
-        class="absolute right-0 py-2 px-4 bg-[#353739] border border-white/10 rounded-full shadow-md text-sm text-white whitespace-nowrap opacity-0 group-hover:opacity-100 hover:brightness-110 transition duration-200 z-50"
+        class="absolute -top-12 -right-10 sm:top-auto sm:right-0 py-2 px-4 bg-[#353739] border border-white/10 rounded-full shadow-md text-sm text-white whitespace-nowrap opacity-0 group-hover:opacity-100 hover:brightness-110 transition duration-200 z-50"
       >
         <button @click="signOut" class="text-left">Logout</button>
       </div>

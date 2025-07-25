@@ -40,7 +40,7 @@
 
     <div
       v-if="workout"
-      class="mt-12 flex flex-col sm:flex-row sm:justify-end gap-4 max-w-2xl ml-auto w-full"
+      class="mt-8 flex flex-col sm:flex-row sm:justify-end gap-4 max-w-2xl ml-auto w-full"
     >
       <button
         @click="discardWorkout"
@@ -76,8 +76,6 @@
         {{store.user ? "Save" : "Sign in to Save"}}
       </button><br />
     </div>
-    
-
 
     <div v-else>
       <p class="text-gray-400 text-center mt-20">No workout found. Please create one from the form first.</p>

@@ -9,7 +9,7 @@
       <p class="text-center text-sm text-[#a2a9b0] mt-2">(Select 1–2)</p>
     </div>
 
-    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
       <button
         v-for="option in options"
         :key="option"
