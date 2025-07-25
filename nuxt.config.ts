@@ -7,4 +7,10 @@ export default defineNuxtConfig({
   app: {
     baseURL: '/',
   },
+  nitro: {
+    preset: 'firebase',
+    firebase: {
+      gen: 2
+    }
+  }
 })

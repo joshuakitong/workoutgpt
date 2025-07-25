@@ -9,8 +9,12 @@
     "rewrites": [
       {
         "source": "**",
-        "destination": "/index.html"
+        "function": "server"
       }
     ]
+  },
+  "functions": {
+    "source": ".output/server",
+    "runtime": "nodejs22"
   }
 }
