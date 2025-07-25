@@ -47,6 +47,32 @@
       </div>
     </div>
 
+    <div class="absolute top-4 right-4 z-50">
+      <button
+        v-if="!store.user"
+        @click="signIn"
+        class="px-4 py-2 rounded-full bg-blue-500 hover:brightness-110 text-white text-sm font-medium shadow transition"
+      >
+        Sign In
+      </button>
+
+      <div v-else class="relative group">
+        <button class="w-10 h-10 rounded-full overflow-hidden border-2 border-white shadow">
+          <img
+            v-if="store.user && store.user.photoURL"
+            :src="store.user.photoURL"
+            alt="User profile"
+            class="w-full h-full object-cover"
+          />
+        </button>
+        <div
+          class="absolute right-0 mt-2 bg-[#353739] border border-white/10 rounded-lg shadow-md p-2 text-sm text-white whitespace-nowrap opacity-0 group-hover:opacity-100 transition duration-200 z-50"
+        >
+          <button @click="signOut" class="hover:underline text-left">Logout</button>
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -58,6 +84,7 @@ import focusTargets from '~/data/focusTargets.js'
 import equipmentOptions from '~/data/equipmentOptions.js'
 import { submitFormToGemini } from '@/utils/submitForm.js'
 import { useWorkoutStore } from '@/firebase/firebaseService'
+import { useAuth } from '@/composables/useAuth'
 
 import Step1 from '~/components/wizard/Step1FitnessGoal.vue'
 import Step2 from '~/components/wizard/Step2FocusTargets.vue'
@@ -65,6 +92,9 @@ import Step3 from '~/components/wizard/Step3Equipment.vue'
 import Step4 from '~/components/wizard/Step4Duration.vue'
 import Step5 from '~/components/wizard/Step5ExperienceLevel.vue'
 import Step6 from '~/components/wizard/Step6Notes.vue'
+
+const { signIn, signOut } = useAuth()
+const store = useWorkoutStore()
 
 const started = ref(false)
 const currentStep = ref(0)
@@ -98,7 +128,6 @@ const nextStep = async () => {
         originalForm: { ...form }
       }
 
-      const store = useWorkoutStore()
       store.setCurrentWorkout(workout)
 
       router.push({ path: `/workout/${id}`, query: { justGenerated: 'true' } })

@@ -26,10 +26,10 @@
       </button>
     </div>
 
-    <nav class="mt-2 flex flex-col px-2">
+    <nav class="mt-2 flex flex-col px-3">
       <NuxtLink
         to="/"
-        class="flex items-center gap-3 p-3 rounded-full text-[#a2a9b0] hover:text-blue-500 transition"
+        class="flex items-center gap-3 py-3 px-2 rounded-full text-[#a2a9b0] hover:text-blue-500 transition"
         exact-active-class="text-blue-500 cursor-default"
       >
         <!-- Plus Icon -->
@@ -55,7 +55,7 @@
 
       <NuxtLink
         to="/workouts"
-        class="flex items-center gap-3 p-3 rounded-full text-[#a2a9b0] hover:text-blue-500 transition"
+        class="flex items-center gap-3 py-3 px-2 rounded-full text-[#a2a9b0] hover:text-blue-500 transition"
         active-class="text-blue-500 cursor-default"
       >
         <!-- Heart Icon -->
@@ -78,29 +78,49 @@
       </NuxtLink>
       <div class="mt-4">
         <p
-          class="px-3 text-xs font-semibold text-[#777] uppercase tracking-wide"
+          class="px-3 text-xs font-semibold text-[#a2a9b0] uppercase tracking-wide transition-opacity duration-300"
           :class="{ 'opacity-0': !isExpanded }"
         >
           Recent
         </p>
-
-        <NuxtLink
-          v-for="w in workouts"
-          :key="w.id"
-          :to="`/workout/${w.id}`"
-          class="flex items-center gap-3 p-3 rounded-full text-[#a2a9b0] hover:text-blue-500 transition"
-          :class="{ 'text-blue-500 cursor-default': isWorkoutActive(w.id) }"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-          </svg>
-          <span
-            class="text-sm truncate transition-opacity duration-300"
-            :class="isExpanded ? 'opacity-100' : 'opacity-0'"
+        <div v-if="store.user">
+          <NuxtLink
+            v-for="w in workouts"
+            :key="w.id"
+            :to="`/workout/${w.id}`"
+            class="flex items-center gap-3 py-3 px-2 rounded-full text-[#a2a9b0] hover:text-blue-500 transition"
+            :class="{ 'text-blue-500 cursor-default': isWorkoutActive(w.id) }"
           >
-            {{ w.title || 'Untitled' }}
-          </span>
-        </NuxtLink>
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+            <span
+              class="text-sm truncate transition-opacity duration-300"
+              :class="isExpanded ? 'opacity-100' : 'opacity-0'"
+            >
+              {{ w.title || 'Untitled' }}
+            </span>
+          </NuxtLink>
+        </div>
+
+        <div v-else
+          class="mt-4 mx-auto py-4 px-6 w-full rounded-xl bg-[#353739] transition-all"
+          :class="{
+            'opacity-100 delay-200 duration-300': isExpanded,
+            'opacity-0 delay-0 duration-50': !isExpanded
+          }"
+        >
+          <p class="text-sm text-[#a2a9b0] mb-2">
+            Sign in to start saving your workouts.<br />
+            Once you're signed in, you can access your recent workouts here.
+          </p>
+          <button
+            @click="signIn"
+            class="text-sm font-medium mt-2 px-4 py-2 rounded-full text-blue-500 hover:bg-[#ddd] hover:bg-[#353739] transition"
+          >
+            Sign In
+          </button>
+        </div>
       </div>
     </nav>
     
@@ -109,9 +129,11 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { useWorkoutStore } from '@/firebase/firebaseService'
 import { useRoute } from 'vue-router'
+import { useWorkoutStore } from '@/firebase/firebaseService'
+import { useAuth } from '@/composables/useAuth'
 
+const { signIn } = useAuth()
 const hovering = ref(false)
 const lockedOpen = ref(false)
 const isExpanded = computed(() => hovering.value || lockedOpen.value)

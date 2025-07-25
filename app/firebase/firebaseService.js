@@ -2,8 +2,22 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
 export const useWorkoutStore = defineStore('workout', () => {
+  const user = ref(null)
   const currentWorkout = ref(null)
   const workouts = ref([])
+
+  const setUser = (userData) => {
+    user.value = userData ? {
+      uid: userData.uid,
+      displayName: userData.displayName,
+      email: userData.email,
+      photoURL: userData.photoURL
+    } : null
+  }
+
+  const clearUser = () => {
+    user.value = null
+  }
 
   if (typeof window !== 'undefined') {
     currentWorkout.value = loadCurrentWorkout()
@@ -93,12 +107,15 @@ export const useWorkoutStore = defineStore('workout', () => {
   }
 
   return {
+    user,
     currentWorkout,
     workouts,
     initializeStore,
     setCurrentWorkout,
     addWorkout,
     updateWorkout,
-    deleteWorkout
+    deleteWorkout,
+    setUser,
+    clearUser
   }
 })
