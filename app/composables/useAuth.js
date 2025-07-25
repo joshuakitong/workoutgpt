@@ -15,7 +15,7 @@ export const useAuth = () => {
   const signOut = async () => {
     try {
       await signOutUser()
-      router.push('/')
+      router.push('/').then(() => window.location.reload())
     } catch (err) {
       console.error('Sign-out failed:', err)
     }
