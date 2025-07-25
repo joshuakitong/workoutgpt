@@ -38,7 +38,7 @@ export default {
   'Weight Loss': [
     'HIIT',
     'Full Body Burn',
-    'Core Focus',
+    'Core',
     'Cardio Strength',
     'Metabolic Conditioning' 
   ]
