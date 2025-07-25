@@ -1,5 +1,5 @@
 <template>
-  <div class="text-white p-6 max-w-4xl mx-auto">
+  <div class="text-white p-6 max-w-2xl mx-auto">
     <h1 class="text-3xl font-bold mb-6 text-center">My Workouts</h1>
 
     <div v-if="workouts.length">

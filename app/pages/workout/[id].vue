@@ -1,5 +1,5 @@
 <template>
-  <div class="text-white py-6 px-0 sm:px-6 max-w-64 sm:max-w-3xl mx-auto">
+  <div class="text-white py-6 px-0 sm:px-6 max-w-64 sm:max-w-2xl mx-auto">
     <div v-if="workout">
       <h1 class="text-3xl font-bold mb-1">{{ workout.title }}</h1>
       <p class="text-sm text-gray-400 mt-4">
@@ -45,7 +45,8 @@
       <button
         @click="discardWorkout"
         v-if="!isSavedWorkout"
-        class="w-full sm:w-auto px-5 py-2 rounded-full font-medium transition text-[#a2a9b0] hover:bg-[#353739] disabled:opacity-50"
+        :disabled="regenerating"
+        class="w-full sm:w-auto px-5 py-2 rounded-full font-medium transition text-[#a2a9b0] hover:bg-[#353739] disabled:opacity-50 disabled:bg-transparent"
       >
         Discard
       </button>
@@ -53,14 +54,15 @@
       <button
         @click="showDeleteModal = true"
         v-if="isSavedWorkout"
-        class="w-full sm:w-auto px-5 py-2 rounded-full font-medium transition text-red-400 hover:bg-red-500 hover:text-white"
+        :disabled="regenerating"
+        class="w-full sm:w-auto px-5 py-2 rounded-full font-medium transition text-red-400 hover:bg-red-500 hover:text-white disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-red-400"
       >
         Delete
       </button>
 
       <button
         @click="regenerateWorkout"
-        class="w-full sm:w-auto px-5 py-2 rounded-full font-medium transition bg-yellow-500 hover:brightness-110 text-black disabled:opacity-50"
+        class="w-full sm:w-auto px-5 py-2 rounded-full font-medium transition bg-yellow-500 hover:brightness-110 text-black disabled:opacity-50 disabled:hover:brightness-100"
         :disabled="regenerating"
       >
         {{ regenerating ? 'Regenerating...' : 'Regenerate' }}
@@ -68,12 +70,13 @@
 
       <button
         @click="saveWorkout"
-        :disabled="!(justGenerated || hasRegenerated)"
+        :disabled="!(justGenerated || hasRegenerated) || regenerating || !store.user"
         class="w-full sm:w-auto px-5 py-2 rounded-full font-medium transition bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:brightness-110 disabled:hover:brightness-100 text-white disabled:opacity-50"
       >
-        Save
-      </button>
+        {{store.user ? "Save" : "Sign in to Save"}}
+      </button><br />
     </div>
+    
 
 
     <div v-else>
