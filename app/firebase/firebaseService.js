@@ -1,33 +1,48 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
+import {
+  getFirestore,
+  collection,
+  doc,
+  setDoc,
+  deleteDoc,
+  getDocs,
+  query,
+  orderBy
+} from 'firebase/firestore'
 
 export const useWorkoutStore = defineStore('workout', () => {
   const user = ref(null)
   const currentWorkout = ref(null)
   const workouts = ref([])
 
-  const setUser = (userData) => {
+  const getDB = () => {
+    const { $firebaseApp } = useNuxtApp()
+    return getFirestore($firebaseApp)
+  }
+
+  const setUser = async (userData) => {
     user.value = userData ? {
       uid: userData.uid,
       displayName: userData.displayName,
       email: userData.email,
       photoURL: userData.photoURL
     } : null
+
+    if (user.value) await fetchWorkouts()
   }
 
   const clearUser = () => {
     user.value = null
+    workouts.value = []
   }
 
   if (typeof window !== 'undefined') {
     currentWorkout.value = loadCurrentWorkout()
-    workouts.value = loadWorkoutList()
   }
 
   const initializeStore = () => {
     if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('workouts')
-      workouts.value = saved ? JSON.parse(saved) : []
       const current = localStorage.getItem('currentWorkout')
       currentWorkout.value = current ? JSON.parse(current) : null
     }
@@ -37,14 +52,6 @@ export const useWorkoutStore = defineStore('workout', () => {
     currentWorkout.value = workout
     if (typeof window !== 'undefined') {
       saveCurrentWorkout(workout)
-    }
-  }
-
-  function addWorkout(workout) {
-    workouts.value.push(workout)
-    workouts.value.sort((a, b) => new Date(b.savedAt) - new Date(a.savedAt))
-    if (typeof window !== 'undefined') {
-      saveWorkoutList(workouts.value)
     }
   }
 
@@ -66,38 +73,57 @@ export const useWorkoutStore = defineStore('workout', () => {
     }
   }
 
-  function loadWorkoutList() {
-    try {
-      const data = localStorage.getItem('workouts')
-      const parsed = data ? JSON.parse(data) : []
-      return parsed.sort((a, b) => new Date(b.savedAt) - new Date(a.savedAt))
-    } catch (e) {
-      console.warn('Failed to load workout list:', e)
-      return []
+  async function saveWorkout(workout) {
+    if (!user.value) return
+
+    const db = getDB()
+    const workoutsRef = collection(db, 'users', user.value.uid, 'workouts')
+
+    const workoutId = workout.id || doc(workoutsRef).id
+
+    const docRef = doc(workoutsRef, workoutId)
+    const workoutWithMeta = {
+      ...workout,
+      id: workoutId,
+      savedAt: new Date().toISOString(),
     }
+
+    await setDoc(docRef, workoutWithMeta)
+
+    const index = workouts.value.findIndex(w => w.id === workoutId)
+    if (index === -1) {
+      workouts.value.unshift(workoutWithMeta)
+    } else {
+      workouts.value.splice(index, 1, workoutWithMeta)
+    }
+
+    return workoutId
   }
 
-  function saveWorkoutList(data) {
-    try {
-      localStorage.setItem('workouts', JSON.stringify(data))
-    } catch (e) {
-      console.error('Failed to save workout list:', e)
-    }
+
+  async function fetchWorkouts() {
+    if (!user.value) return
+
+    const db = getDB()
+    const q = query(
+      collection(db, 'users', user.value.uid, 'workouts'),
+      orderBy('savedAt', 'desc')
+    )
+
+    const snapshot = await getDocs(q)
+    workouts.value = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
   }
 
-  function updateWorkout(updated) {
-    const index = workouts.value.findIndex(w => w.id === updated.id)
-    if (index !== -1) {
-      workouts.value.splice(index, 1, updated)
-      saveWorkoutList(workouts.value)
-    }
-  }
+  async function deleteWorkout(id) {
+    if (!user.value) return
 
-  function deleteWorkout(id) {
+    const db = getDB()
+    const docRef = doc(db, 'users', user.value.uid, 'workouts', id)
+    await deleteDoc(docRef)
+
     const index = workouts.value.findIndex(w => w.id === id)
     if (index !== -1) {
       workouts.value.splice(index, 1)
-      if (process.client) saveWorkoutList(workouts.value)
     }
 
     if (currentWorkout.value?.id === id) {
@@ -112,10 +138,10 @@ export const useWorkoutStore = defineStore('workout', () => {
     workouts,
     initializeStore,
     setCurrentWorkout,
-    addWorkout,
-    updateWorkout,
+    saveWorkout,
     deleteWorkout,
     setUser,
-    clearUser
+    clearUser,
+    fetchWorkouts,
   }
 })

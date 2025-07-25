@@ -1,6 +1,9 @@
 import { signInWithGoogle, signOutUser } from '@/firebase/authService'
+import { useRouter } from 'vue-router'
 
 export const useAuth = () => {
+  const router = useRouter()
+
   const signIn = async () => {
     try {
       await signInWithGoogle()
@@ -12,6 +15,7 @@ export const useAuth = () => {
   const signOut = async () => {
     try {
       await signOutUser()
+      router.push('/')
     } catch (err) {
       console.error('Sign-out failed:', err)
     }

@@ -33,7 +33,7 @@
       </div>
 
       <div v-if="workout.notes" class="mt-10">
-        <h3 class="text-lg font-semibold mb-2">Notes</h3>
+        <h3 class="text-lg font-semibold mb-2">WorkoutGPT Notes</h3>
         <p class="text-sm text-gray-300">{{ workout.notes }}</p>
       </div>
     </div>
@@ -134,7 +134,6 @@ const regenerateWorkout = async () => {
       id: workoutId,
       originalForm: workout.value.originalForm,
       title: workout.value.title,
-      notes: workout.value.notes,
       goals: workout.value.goals,
       targets: workout.value.targets,
       equipment: workout.value.equipment,
@@ -159,7 +158,7 @@ const discardWorkout = () => {
   router.push('/')
 }
 
-const saveWorkout = () => {
+const saveWorkout = async () => {
   if (!workout.value) return
 
   const updatedWorkout = {
@@ -167,14 +166,7 @@ const saveWorkout = () => {
     savedAt: new Date().toISOString()
   }
 
-  const exists = store.workouts.find(w => w.id === workout.value.id)
-
-  if (!exists) {
-    store.addWorkout(updatedWorkout)
-  } else {
-    store.updateWorkout(updatedWorkout)
-  }
-
+  await store.saveWorkout(updatedWorkout)
   store.setCurrentWorkout(updatedWorkout)
   alert('Workout saved!')
   router.push('/workouts')

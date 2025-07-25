@@ -13,6 +13,10 @@ export default defineNuxtConfig({
       gen: 2
     }
   },
+  plugins: [
+    '~/plugins/firebase.client.js',
+    '~/plugins/auth.client.js'
+  ],
   runtimeConfig: {
     public: {
       FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,

@@ -125,6 +125,32 @@
     </nav>
     
   </aside>
+
+  <div class="absolute top-4 right-4 z-50">
+    <button
+      v-if="!store.user"
+      @click="signIn"
+      class="px-4 py-2 rounded-full bg-blue-500 hover:brightness-110 text-white text-sm font-medium shadow transition"
+    >
+      Sign In
+    </button>
+
+    <div v-else class="relative group">
+      <button class="w-10 h-10 rounded-full overflow-hidden">
+        <img
+          v-if="store.user && store.user.photoURL"
+          :src="store.user.photoURL"
+          alt="User profile"
+          class="w-full h-full object-cover"
+        />
+      </button>
+      <div
+        class="absolute right-0 py-2 px-4 bg-[#353739] border border-white/10 rounded-full shadow-md text-sm text-white whitespace-nowrap opacity-0 group-hover:opacity-100 hover:brightness-110 transition duration-200 z-50"
+      >
+        <button @click="signOut" class="text-left">Logout</button>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -133,7 +159,7 @@ import { useRoute } from 'vue-router'
 import { useWorkoutStore } from '@/firebase/firebaseService'
 import { useAuth } from '@/composables/useAuth'
 
-const { signIn } = useAuth()
+const { signIn, signOut } = useAuth()
 const hovering = ref(false)
 const lockedOpen = ref(false)
 const isExpanded = computed(() => hovering.value || lockedOpen.value)
@@ -145,8 +171,8 @@ const toggleLock = () => {
 const store = useWorkoutStore()
 const route = useRoute()
 
-onMounted(() => {
-  store.initializeStore()
+onMounted(async () => {
+  if (store.user) await store.fetchWorkouts()
 })
 
 const workouts = computed(() =>

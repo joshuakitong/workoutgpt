@@ -1,6 +1,6 @@
 <template>
   <div class="text-white p-6 max-w-4xl mx-auto">
-    <h1 class="text-3xl font-bold mb-6">My Workouts</h1>
+    <h1 class="text-3xl font-bold mb-6 text-center">My Workouts</h1>
 
     <div v-if="workouts.length">
       <ul class="space-y-4">
@@ -31,7 +31,7 @@
     </div>
 
     <div v-else class="text-center text-gray-400 mt-20">
-      No saved workouts yet. Go to the home page to generate one!
+      No saved workouts yet. Go to the home page to generate one.
     </div>
   </div>
 </template>
@@ -43,8 +43,8 @@ import { RouterLink } from 'vue-router'
 
 const store = useWorkoutStore()
 
-onMounted(() => {
-  store.initializeStore()
+onMounted(async () => {
+  if (store.user) await store.fetchWorkouts()
 })
 
 const workouts = computed(() =>
