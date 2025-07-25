@@ -175,4 +175,12 @@ const saveWorkout = () => {
   alert('Workout saved!')
   router.push('/workouts')
 }
+
+const confirmDeleteWorkout = () => {
+  if (!workout.value) return
+
+  store.deleteWorkout(workout.value.id)
+  alert('Workout deleted.')
+  router.push('/workouts')
+}
 </script>
