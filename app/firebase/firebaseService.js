@@ -60,10 +60,24 @@ export const useWorkoutStore = defineStore('workout', () => {
     }
   }
 
+  function deleteWorkout(id) {
+    const index = workouts.value.findIndex(w => w.id === id)
+    if (index !== -1) {
+      workouts.value.splice(index, 1)
+      if (process.client) saveWorkoutList(workouts.value)
+    }
+
+    if (currentWorkout.value?.id === id) {
+      currentWorkout.value = null
+      if (process.client) localStorage.removeItem('currentWorkout')
+    }
+  }
+
   return {
     currentWorkout,
     workouts,
     setCurrentWorkout,
-    addWorkout
+    addWorkout,
+    deleteWorkout
   }
 })

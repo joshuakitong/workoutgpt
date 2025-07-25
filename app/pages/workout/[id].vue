@@ -1,5 +1,5 @@
 <template>
-  <div class="text-white py-6 px-1 sm:px-6 max-w-xs sm:max-w-3xl mx-auto">
+  <div class="text-white py-6 px-1 sm:px-6 max-w-60 sm:max-w-3xl mx-auto">
     <div v-if="workout">
       <h1 class="text-3xl font-bold mb-1">{{ workout.title }}</h1>
       <p class="text-sm text-gray-400 mt-4">
@@ -38,12 +38,24 @@
       </div>
     </div>
 
-    <div v-if="workout" class="mt-12 flex justify-end gap-4 max-w-2xl ml-auto">
+    <div
+      v-if="workout && (isSavedWorkout)"
+      class="mt-12 flex justify-end gap-4 max-w-2xl ml-auto"
+    >
       <button
         @click="discardWorkout"
+        v-if="!isSavedWorkout"
         class="px-5 py-2 rounded-full font-medium transition text-[#a2a9b0] hover:bg-[#353739] disabled:opacity-50"
       >
         Discard
+      </button>
+
+      <button
+        @click="deleteWorkout"
+        v-if="isSavedWorkout"
+        class="px-5 py-2 rounded-full font-medium transition text-red-400 hover:bg-red-500 hover:text-white"
+      >
+        Delete
       </button>
 
       <button
@@ -56,7 +68,8 @@
 
       <button
         @click="saveWorkout"
-        class="px-5 py-2 rounded-full font-medium transition bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:brightness-110 text-white"
+        :disabled="(!isSavedWorkout || !hasRegenerated)"
+        class="px-5 py-2 rounded-full font-medium transition bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:brightness-110 disabled:hover:brightness-100 text-white disabled:opacity-50"
       >
         Save
       </button>
@@ -82,23 +95,23 @@ const workoutId = route.params.id
 const store = useWorkoutStore()
 const workout = ref(null)
 const regenerating = ref(false)
+const hasRegenerated = ref(false)
+const isSavedWorkout = ref(false)
 
 onMounted(() => {
-  const stored = store.workouts.find(w => w.id === workoutId)
+  const stored = store.workouts?.find(w => w.id === workoutId)
 
   if (stored) {
     workout.value = stored
     store.setCurrentWorkout(stored)
+    isSavedWorkout.value = true
   } else if (store.currentWorkout?.id === workoutId) {
     workout.value = store.currentWorkout
+    isSavedWorkout.value = false
   } else {
     router.replace('/')
   }
 })
-
-const discardWorkout = () => {
-  router.push('/')
-}
 
 const regenerateWorkout = async () => {
   if (!workout.value?.originalForm) return
@@ -112,6 +125,7 @@ const regenerateWorkout = async () => {
     }
     workout.value = updated
     store.setCurrentWorkout(updated)
+    hasRegenerated.value = true
   } catch (err) {
     alert('Regeneration failed.')
     console.error('Regeneration error:', err)
@@ -125,10 +139,18 @@ const saveWorkout = () => {
 
   const exists = store.workouts.find(w => w.id === workout.value.id)
   if (!exists) {
-    store.addWorkout(workout.value)
+    store.addWorkout({ ...workout.value, savedAt: new Date().toISOString() })
   }
   store.setCurrentWorkout(workout.value)
   alert('Workout saved!')
+}
+
+const deleteWorkout = () => {
+  if (!workout.value) return
+
+  store.deleteWorkout(workout.value.id)
+  alert('Workout deleted.')
+  router.push('/workouts')
 }
 </script>
 
