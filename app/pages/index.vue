@@ -38,11 +38,11 @@
         <div :hidden="currentStep !== 0"></div>
         <button
           @click="nextStep"
-          :disabled="!canContinue"
+          :disabled="!canContinue || generating"
           class="px-5 py-2 rounded-full font-medium transition bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:brightness-110 text-white disabled:opacity-50 disabled:hover:brightness-100"
         >
           <span v-if="currentStep !== 5">Next</span>
-          <span v-else>Submit</span>
+          <span v-else>{{ generating ? 'Generating...' : 'Submit' }}</span>
         </button>
       </div>
     </div>
@@ -69,6 +69,7 @@ import Step6 from '~/components/wizard/Step6Notes.vue'
 const started = ref(false)
 const currentStep = ref(0)
 const steps = [Step1, Step2, Step3, Step4, Step5, Step6]
+const generating = ref(false)
 const router = useRouter()
 
 const form = reactive({
@@ -86,6 +87,8 @@ const nextStep = async () => {
     currentStep.value++
   } else {
     try {
+      generating.value = true
+
       const generated = await submitFormToGemini(form)
       const id = uuidv4()
 
@@ -98,9 +101,11 @@ const nextStep = async () => {
       const store = useWorkoutStore()
       store.setCurrentWorkout(workout)
 
-      router.push(`/workout/${id}`)
+      router.push({ path: `/workout/${id}`, query: { justGenerated: 'true' } })
     } catch (err) {
       console.error('Submit failed:', err)
+    } finally {
+      generating.value = false
     }
   }
 }

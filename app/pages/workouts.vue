@@ -38,11 +38,18 @@
 
 <script setup>
 import { useWorkoutStore } from '@/firebase/firebaseService'
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { RouterLink } from 'vue-router'
 
 const store = useWorkoutStore()
-const workouts = computed(() => store.workouts || [])
+
+onMounted(() => {
+  store.initializeStore()
+})
+
+const workouts = computed(() =>
+  [...store.workouts].sort((a, b) => new Date(b.savedAt) - new Date(a.savedAt))
+)
 
 const formatDate = (isoDate) => {
   if (!isoDate) return ''

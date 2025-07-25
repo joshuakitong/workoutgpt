@@ -10,6 +10,15 @@ export const useWorkoutStore = defineStore('workout', () => {
     workouts.value = loadWorkoutList()
   }
 
+  const initializeStore = () => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('workouts')
+      workouts.value = saved ? JSON.parse(saved) : []
+      const current = localStorage.getItem('currentWorkout')
+      currentWorkout.value = current ? JSON.parse(current) : null
+    }
+  }
+
   function setCurrentWorkout(workout) {
     currentWorkout.value = workout
     if (typeof window !== 'undefined') {
@@ -19,6 +28,7 @@ export const useWorkoutStore = defineStore('workout', () => {
 
   function addWorkout(workout) {
     workouts.value.push(workout)
+    workouts.value.sort((a, b) => new Date(b.savedAt) - new Date(a.savedAt))
     if (typeof window !== 'undefined') {
       saveWorkoutList(workouts.value)
     }
@@ -45,7 +55,8 @@ export const useWorkoutStore = defineStore('workout', () => {
   function loadWorkoutList() {
     try {
       const data = localStorage.getItem('workouts')
-      return data ? JSON.parse(data) : []
+      const parsed = data ? JSON.parse(data) : []
+      return parsed.sort((a, b) => new Date(b.savedAt) - new Date(a.savedAt))
     } catch (e) {
       console.warn('Failed to load workout list:', e)
       return []
@@ -57,6 +68,14 @@ export const useWorkoutStore = defineStore('workout', () => {
       localStorage.setItem('workouts', JSON.stringify(data))
     } catch (e) {
       console.error('Failed to save workout list:', e)
+    }
+  }
+
+  function updateWorkout(updated) {
+    const index = workouts.value.findIndex(w => w.id === updated.id)
+    if (index !== -1) {
+      workouts.value.splice(index, 1, updated)
+      saveWorkoutList(workouts.value)
     }
   }
 
@@ -76,8 +95,10 @@ export const useWorkoutStore = defineStore('workout', () => {
   return {
     currentWorkout,
     workouts,
+    initializeStore,
     setCurrentWorkout,
     addWorkout,
+    updateWorkout,
     deleteWorkout
   }
 })

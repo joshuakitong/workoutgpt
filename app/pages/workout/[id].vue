@@ -39,7 +39,7 @@
     </div>
 
     <div
-      v-if="workout && (isSavedWorkout)"
+      v-if="workout"
       class="mt-12 flex justify-end gap-4 max-w-2xl ml-auto"
     >
       <button
@@ -68,13 +68,12 @@
 
       <button
         @click="saveWorkout"
-        :disabled="(!isSavedWorkout || !hasRegenerated)"
+        :disabled="!(justGenerated || hasRegenerated)"
         class="px-5 py-2 rounded-full font-medium transition bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:brightness-110 disabled:hover:brightness-100 text-white disabled:opacity-50"
       >
         Save
       </button>
     </div>
-
 
     <div v-else>
       <p class="text-gray-400 text-center mt-20">No workout found. Please create one from the form first.</p>
@@ -98,7 +97,7 @@ import DeleteConfirmationModal from '~/components/workout/deleteConfirmationModa
 const route = useRoute()
 const router = useRouter()
 const workoutId = route.params.id
-
+const justGenerated = computed(() => route.query.justGenerated === 'true')
 const store = useWorkoutStore()
 const workout = ref(null)
 const regenerating = ref(false)
@@ -123,17 +122,30 @@ onMounted(() => {
 
 const regenerateWorkout = async () => {
   if (!workout.value?.originalForm) return
+
   regenerating.value = true
+
   try {
     const regenerated = await submitFormToGemini(workout.value.originalForm)
+
     const updated = {
       ...regenerated,
+      id: workoutId,
       originalForm: workout.value.originalForm,
-      id: workoutId
+      title: workout.value.title,
+      notes: workout.value.notes,
+      goals: workout.value.goals,
+      targets: workout.value.targets,
+      equipment: workout.value.equipment,
+      experience: workout.value.experience,
+      duration: workout.value.duration,
+      savedAt: new Date().toISOString()
     }
+
     workout.value = updated
     store.setCurrentWorkout(updated)
     hasRegenerated.value = true
+
   } catch (err) {
     alert('Regeneration failed.')
     console.error('Regeneration error:', err)
@@ -145,21 +157,21 @@ const regenerateWorkout = async () => {
 const saveWorkout = () => {
   if (!workout.value) return
 
-  const exists = store.workouts.find(w => w.id === workout.value.id)
-  if (!exists) {
-    store.addWorkout({ ...workout.value, savedAt: new Date().toISOString() })
+  const updatedWorkout = {
+    ...workout.value,
+    savedAt: new Date().toISOString()
   }
-  store.setCurrentWorkout(workout.value)
+
+  const exists = store.workouts.find(w => w.id === workout.value.id)
+
+  if (!exists) {
+    store.addWorkout(updatedWorkout)
+  } else {
+    store.updateWorkout(updatedWorkout)
+  }
+
+  store.setCurrentWorkout(updatedWorkout)
   alert('Workout saved!')
-}
-
-const confirmDeleteWorkout = () => {
-  if (!workout.value) return
-
-  store.deleteWorkout(workout.value.id)
-  alert('Workout deleted.')
   router.push('/workouts')
 }
 </script>
-
-
