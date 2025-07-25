@@ -3,7 +3,7 @@
     @mouseenter="hovering = true"
     @mouseleave="hovering = false"
     :class="[
-      'sticky top-0 min-h-[calc(100vh+6rem)] bg-[#282a2c] text-white transition-all duration-300 z-50',
+      'sticky top-0 min-h-screen bg-[#282a2c] text-white transition-all duration-300 z-50',
       isExpanded ? 'w-72' : 'w-16'
     ]"
   >
@@ -73,24 +73,63 @@
           class="text-md font-semibold truncate transition-opacity duration-300"
           :class="isExpanded ? 'opacity-100' : 'opacity-0'"
         >
-          Generated Workouts
+          My Workouts
         </span>
       </NuxtLink>
+      <div class="mt-4">
+        <p
+          class="px-3 text-xs font-semibold text-[#777] uppercase tracking-wide"
+          :class="{ 'opacity-0': !isExpanded }"
+        >
+          Recent
+        </p>
+
+        <NuxtLink
+          v-for="w in workouts"
+          :key="w.id"
+          :to="`/workout/${w.id}`"
+          class="flex items-center gap-3 p-3 rounded-full text-[#a2a9b0] hover:text-blue-500 transition"
+          :class="{ 'text-blue-500 cursor-default': isWorkoutActive(w.id) }"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+          <span
+            class="text-sm truncate transition-opacity duration-300"
+            :class="isExpanded ? 'opacity-100' : 'opacity-0'"
+          >
+            {{ w.title || 'Untitled' }}
+          </span>
+        </NuxtLink>
+      </div>
     </nav>
     
   </aside>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { useWorkoutStore } from '@/firebase/firebaseService'
+import { useRoute } from 'vue-router'
 
 const hovering = ref(false)
 const lockedOpen = ref(false)
-
+const isExpanded = computed(() => hovering.value || lockedOpen.value)
 const toggleLock = () => {
   lockedOpen.value = !lockedOpen.value
   hovering.value = false
 }
 
-const isExpanded = computed(() => hovering.value || lockedOpen.value)
+const store = useWorkoutStore()
+const route = useRoute()
+
+onMounted(() => {
+  store.initializeStore()
+})
+
+const workouts = computed(() =>
+  [...store.workouts].sort((a, b) => new Date(b.savedAt || 0) - new Date(a.savedAt || 0)).slice(0, 5)
+)
+
+const isWorkoutActive = (id) => route.path === `/workout/${id}`
 </script>
