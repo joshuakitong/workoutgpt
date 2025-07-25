@@ -155,6 +155,10 @@ const regenerateWorkout = async () => {
   }
 }
 
+const discardWorkout = () => {
+  router.push('/')
+}
+
 const saveWorkout = () => {
   if (!workout.value) return
 
