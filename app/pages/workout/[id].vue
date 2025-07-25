@@ -1,5 +1,5 @@
 <template>
-  <div class="text-white py-6 px-1 sm:px-6 max-w-60 sm:max-w-3xl mx-auto">
+  <div class="text-white py-6 px-0 sm:px-6 max-w-64 sm:max-w-3xl mx-auto">
     <div v-if="workout">
       <h1 class="text-3xl font-bold mb-1">{{ workout.title }}</h1>
       <p class="text-sm text-gray-400 mt-4">
@@ -40,12 +40,12 @@
 
     <div
       v-if="workout"
-      class="mt-12 flex justify-end gap-4 max-w-2xl ml-auto"
+      class="mt-12 flex flex-col sm:flex-row sm:justify-end gap-4 max-w-2xl ml-auto w-full"
     >
       <button
         @click="discardWorkout"
         v-if="!isSavedWorkout"
-        class="px-5 py-2 rounded-full font-medium transition text-[#a2a9b0] hover:bg-[#353739] disabled:opacity-50"
+        class="w-full sm:w-auto px-5 py-2 rounded-full font-medium transition text-[#a2a9b0] hover:bg-[#353739] disabled:opacity-50"
       >
         Discard
       </button>
@@ -53,14 +53,14 @@
       <button
         @click="showDeleteModal = true"
         v-if="isSavedWorkout"
-        class="px-5 py-2 rounded-full font-medium transition text-red-400 hover:bg-red-500 hover:text-white"
+        class="w-full sm:w-auto px-5 py-2 rounded-full font-medium transition text-red-400 hover:bg-red-500 hover:text-white"
       >
         Delete
       </button>
 
       <button
         @click="regenerateWorkout"
-        class="px-5 py-2 rounded-full font-medium transition bg-yellow-500 hover:brightness-110 text-black disabled:opacity-50"
+        class="w-full sm:w-auto px-5 py-2 rounded-full font-medium transition bg-yellow-500 hover:brightness-110 text-black disabled:opacity-50"
         :disabled="regenerating"
       >
         {{ regenerating ? 'Regenerating...' : 'Regenerate' }}
@@ -69,11 +69,12 @@
       <button
         @click="saveWorkout"
         :disabled="!(justGenerated || hasRegenerated)"
-        class="px-5 py-2 rounded-full font-medium transition bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:brightness-110 disabled:hover:brightness-100 text-white disabled:opacity-50"
+        class="w-full sm:w-auto px-5 py-2 rounded-full font-medium transition bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:brightness-110 disabled:hover:brightness-100 text-white disabled:opacity-50"
       >
         Save
       </button>
     </div>
+
 
     <div v-else>
       <p class="text-gray-400 text-center mt-20">No workout found. Please create one from the form first.</p>
