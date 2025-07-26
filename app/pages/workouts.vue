@@ -1,10 +1,10 @@
 <template>
   <div class="text-white py-6 px-0 sm:px-6 max-w-64 sm:max-w-2xl mx-auto">
     <h1 class="text-3xl font-bold mb-6">My Workouts</h1>
-    <div v-if="isLoading">
-      <div class="flex items-center justify-center mx-auto w-10 h-10 mt-20">
-        <div class="h-6 w-6 border-2 border-[#a2a9b0] border-t-transparent rounded-full animate-spin"></div>
-      </div>
+    <div v-if="isLoading" class="space-y-4">
+      <SkeletonBox height="h-32" width="w-full" rounded="rounded-xl" />
+      <SkeletonBox height="h-32" width="w-full" rounded="rounded-xl" />
+      <SkeletonBox height="h-32" width="w-full" rounded="rounded-xl" />
     </div>
 
     <div v-else-if="workouts.length">
@@ -45,6 +45,7 @@
 import { useWorkoutStore } from '@/firebase/firebaseService'
 import { computed, onMounted, ref } from 'vue'
 import { RouterLink } from 'vue-router'
+import SkeletonBox from '@/components/SkeletonBox.vue'
 
 const store = useWorkoutStore()
 const isLoading = ref(true)

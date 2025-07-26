@@ -1,9 +1,14 @@
 <template>
   <div class="text-white py-6 px-0 sm:px-6 max-w-64 sm:max-w-2xl mx-auto">
-    <div v-if="isLoading">
-      <div class="flex items-center justify-center mx-auto w-10 h-10 mt-20">
-        <div class="h-6 w-6 border-2 border-[#a2a9b0] border-t-transparent rounded-full animate-spin"></div>
-      </div>
+    <div v-if="isLoading" class="space-y-4">
+      <SkeletonBox height="h-10" width="w-full" rounded="rounded-md" />
+      <SkeletonBox height="h-4" width="w-4/5" rounded="rounded-md" />
+      <SkeletonBox height="h-4" width="w-1/2" rounded="rounded-md" />
+      <SkeletonBox height="h-4" width="w-1/3" rounded="rounded-md" />
+      <SkeletonBox height="h-4" width="w-2/3" rounded="rounded-md" />
+      <SkeletonBox height="h-32" width="w-full" rounded="rounded-xl" />
+      <SkeletonBox height="h-32" width="w-full" rounded="rounded-xl" />
+      <SkeletonBox height="h-32" width="w-full" rounded="rounded-xl" />
     </div>
     
     <div v-else-if="workout">
@@ -102,6 +107,7 @@ import { useWorkoutStore } from '@/firebase/firebaseService'
 import { onMounted, ref } from 'vue'
 import { submitFormToGemini } from '@/utils/submitForm'
 import DeleteConfirmationModal from '~/components/workout/deleteConfirmationModal.vue'
+import SkeletonBox from '@/components/SkeletonBox.vue'
 
 const route = useRoute()
 const router = useRouter()
