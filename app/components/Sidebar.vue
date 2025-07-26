@@ -129,7 +129,7 @@
     <button
       v-if="!store.user"
       @click="signIn"
-      class="px-4 py-2 rounded-full bg-blue-500 hover:brightness-110 text-white text-sm font-medium shadow transition"
+      class="hidden sm:block px-4 py-2 rounded-full bg-blue-500 hover:brightness-110 text-white text-sm font-medium shadow transition"
     >
       Sign In
     </button>
