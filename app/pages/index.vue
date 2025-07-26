@@ -3,7 +3,7 @@
     <!-- Header -->
     <h1
       class="text-4xl font-bold bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent transition-all duration-500"
-      :class="started ? 'mx-auto my-6 z-50 text-2xl' : 'mx-auto mt-[40vh]'"
+      :class="started ? 'mx-auto my-6 z-40 text-2xl' : 'mx-auto mt-[40vh]'"
     >
       WorkoutGPT
     </h1>
