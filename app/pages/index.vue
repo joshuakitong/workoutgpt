@@ -11,7 +11,7 @@
     <!-- Start Button -->
     <div v-if="!started" class="mx-auto mt-8">
       <button
-        @click="started = true"
+        @click="start"
         class="px-6 py-3 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:brightness-110 rounded-full font-semibold text-white transition"
       >
         New Workout
@@ -19,39 +19,53 @@
     </div>
 
     <!-- Form Wizard -->
-    <div v-if="started" class="flex flex-col justify-between min-h-[calc(100vh-6rem)] items-center px-4">
-      <!-- Step Content -->
-      <div class="flex-1 flex items-center justify-center w-full max-w-2xl">
-        <component v-if="!generating" :is="steps[currentStep]" v-model:form="form" />
-
-        <div v-else>
-          <div class="flex items-center justify-center mx-auto w-10 h-10">
-            <div class="h-6 w-6 border-2 border-[#a2a9b0] border-t-transparent rounded-full animate-spin"></div>
+     <Transition @enter="onStepShowEnter">
+      <div v-if="showStep" class="flex flex-col justify-between min-h-[calc(100vh-6rem)] items-center px-4">
+        <!-- Step Content -->
+        <Transition
+          mode="out-in"
+          @enter="onEnter"
+          @leave="onLeave"
+        >
+          <div
+            :key="currentStep"
+            class="flex-1 flex items-center justify-center w-full max-w-2xl"
+          >
+            <component
+              v-if="!generating"
+              :is="steps[currentStep]"
+              v-model:form="form"
+            />
+            <div v-else>
+              <div class="flex items-center justify-center mx-auto w-10 h-10">
+                <div class="h-6 w-6 border-2 border-[#a2a9b0] border-t-transparent rounded-full animate-spin"></div>
+              </div>
+            </div>
           </div>
+        </Transition>
+      
+        <!-- Bottom Nav Buttons -->
+        <div class="flex justify-between my-6 w-full max-w-2xl">
+          <button
+            @click="prevStep"
+            :disabled="currentStep === 0"
+            :hidden="currentStep === 0"
+            class="px-5 py-2 rounded-full font-medium transition text-[#a2a9b0] hover:bg-[#353739] disabled:opacity-50"
+          >
+            Previous
+          </button>
+          <div :hidden="currentStep !== 0"></div>
+          <button
+            @click="nextStep"
+            :disabled="!canContinue || generating"
+            class="px-5 py-2 rounded-full font-medium transition bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:brightness-110 text-white disabled:opacity-50 disabled:hover:brightness-100"
+          >
+            <span v-if="currentStep !== 5">Next</span>
+            <span v-else>{{ generating ? 'Generating...' : 'Submit' }}</span>
+          </button>
         </div>
       </div>
-
-      <!-- Bottom Nav Buttons -->
-      <div class="flex justify-between my-6 w-full max-w-2xl">
-        <button
-          @click="prevStep"
-          :disabled="currentStep === 0"
-          :hidden="currentStep === 0"
-          class="px-5 py-2 rounded-full font-medium transition text-[#a2a9b0] hover:bg-[#353739] disabled:opacity-50"
-        >
-          Previous
-        </button>
-        <div :hidden="currentStep !== 0"></div>
-        <button
-          @click="nextStep"
-          :disabled="!canContinue || generating"
-          class="px-5 py-2 rounded-full font-medium transition bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:brightness-110 text-white disabled:opacity-50 disabled:hover:brightness-100"
-        >
-          <span v-if="currentStep !== 5">Next</span>
-          <span v-else>{{ generating ? 'Generating...' : 'Submit' }}</span>
-        </button>
-      </div>
-    </div>
+    </Transition>
   </div>
 </template>
 
@@ -63,6 +77,7 @@ import focusTargets from '~/data/focusTargets.js'
 import equipmentOptions from '~/data/equipmentOptions.js'
 import { submitFormToGemini } from '@/utils/submitForm.js'
 import { useWorkoutStore } from '@/firebase/firebaseService'
+import gsap from 'gsap'
 
 import Step1 from '~/components/wizard/Step1FitnessGoal.vue'
 import Step2 from '~/components/wizard/Step2FocusTargets.vue'
@@ -74,7 +89,9 @@ import Step6 from '~/components/wizard/Step6Notes.vue'
 const store = useWorkoutStore()
 
 const started = ref(false)
+const showStep = ref(false)
 const currentStep = ref(0)
+const direction = ref('forward')
 const steps = [Step1, Step2, Step3, Step4, Step5, Step6]
 const generating = ref(false)
 const router = useRouter()
@@ -89,7 +106,15 @@ const form = reactive({
   notes: ''
 })
 
+const start = () => {
+  started.value = true
+  setTimeout(() => {
+    showStep.value = true
+  }, 400)
+}
+
 const nextStep = async () => {
+  direction.value = 'forward'
   if (currentStep.value < steps.length - 1) {
     currentStep.value++
   } else {
@@ -117,6 +142,7 @@ const nextStep = async () => {
 }
 
 const prevStep = () => {
+  direction.value = 'backward'
   if (currentStep.value > 0) currentStep.value--
 }
 
@@ -128,6 +154,40 @@ const canContinue = computed(() => {
   else if (currentStep.value === 4)  return !!form.experience
   return true
 })
+
+const onStepShowEnter = (el) => {
+  gsap.fromTo(
+    el,
+    { opacity: 0 },
+    { opacity: 1, duration: 1, ease: 'power2.out' }
+  )
+}
+
+const onEnter = (el) => {
+  gsap.fromTo(
+    el,
+    {
+      opacity: 0,
+      x: direction.value === 'forward' ? 100 : -100
+    },
+    {
+      opacity: 1,
+      x: 0,
+      duration: 0.7,
+      ease: 'power2.out'
+    }
+  )
+}
+
+const onLeave = (el, done) => {
+  gsap.to(el, {
+    opacity: 0,
+    x: direction.value === 'forward' ? -100 : 100,
+    duration: 0.3,
+    ease: 'power2.in',
+    onComplete: done
+  })
+}
 
 watch(
   () => [form.primaryGoal, form.secondaryGoal],
