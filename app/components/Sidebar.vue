@@ -83,7 +83,13 @@
         >
           Recent
         </p>
-        <div v-if="store.user">
+        <div v-if="isLoading">
+          <div class="flex items-center justify-center mx-auto w-10 h-10">
+            <div class="h-4 w-4 border-2 border-[#a2a9b0] border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        </div>
+
+        <div v-else-if="store.user">
           <NuxtLink
             v-for="w in workouts"
             :key="w.id"
@@ -126,8 +132,12 @@
   </aside>
 
   <div class="fixed bottom-3 left-3 md:top-3 md:right-3 md:bottom-auto md:left-auto z-50">
+    <div v-if="store.userLoading" class="flex items-center justify-center w-10 h-10">
+      <div class="h-4 w-4 border-2 border-[#a2a9b0] border-t-transparent rounded-full animate-spin"></div>
+    </div>
+
     <button
-      v-if="!store.user"
+      v-else-if="!store.user"
       @click="signIn"
       class="hidden sm:block px-4 py-2 rounded-full bg-blue-500 hover:brightness-110 text-white text-sm font-medium shadow transition"
     >
@@ -137,7 +147,7 @@
     <div v-else class="relative group">
       <button class="w-10 h-10 rounded-full overflow-hidden">
         <img
-          v-if="store.user && store.user.photoURL"
+          v-if="store.user.photoURL"
           :src="store.user.photoURL"
           alt="User profile"
           class="w-full h-full object-cover"
@@ -161,6 +171,7 @@ import { useAuth } from '@/composables/useAuth'
 const { signIn, signOut } = useAuth()
 const hovering = ref(false)
 const lockedOpen = ref(false)
+const isLoading = ref(true)
 const isExpanded = computed(() => hovering.value || lockedOpen.value)
 const toggleLock = () => {
   lockedOpen.value = !lockedOpen.value
@@ -171,7 +182,12 @@ const store = useWorkoutStore()
 const route = useRoute()
 
 onMounted(async () => {
+  while (!store.user) {
+    await new Promise(resolve => setTimeout(resolve, 50))
+  }
+
   if (store.user) await store.fetchWorkouts()
+  isLoading.value = false
 })
 
 const workouts = computed(() =>

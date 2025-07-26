@@ -13,6 +13,7 @@ import {
 
 export const useWorkoutStore = defineStore('workout', () => {
   const user = ref(null)
+  const userLoading = ref(true)
   const currentWorkout = ref(null)
   const workouts = ref([])
 
@@ -30,11 +31,13 @@ export const useWorkoutStore = defineStore('workout', () => {
     } : null
 
     if (user.value) await fetchWorkouts()
+    userLoading.value = false
   }
 
   const clearUser = () => {
     user.value = null
     workouts.value = []
+    userLoading.value = false
   }
 
   if (typeof window !== 'undefined') {
@@ -134,6 +137,7 @@ export const useWorkoutStore = defineStore('workout', () => {
 
   return {
     user,
+    userLoading,
     currentWorkout,
     workouts,
     initializeStore,

@@ -1,8 +1,13 @@
 <template>
   <div class="text-white py-6 px-0 sm:px-6 max-w-64 sm:max-w-2xl mx-auto">
     <h1 class="text-3xl font-bold mb-6">My Workouts</h1>
+    <div v-if="isLoading">
+      <div class="flex items-center justify-center mx-auto w-10 h-10 mt-20">
+        <div class="h-6 w-6 border-2 border-[#a2a9b0] border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    </div>
 
-    <div v-if="workouts.length">
+    <div v-else-if="workouts.length">
       <ul class="space-y-4">
         <li
           v-for="w in workouts"
@@ -31,20 +36,26 @@
     </div>
 
     <div v-else class="text-center text-gray-400 mt-20">
-      No saved workouts yet. Go to the home page to generate one.
+      No saved workouts yet. Create one from + New Workout.
     </div>
   </div>
 </template>
 
 <script setup>
 import { useWorkoutStore } from '@/firebase/firebaseService'
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 
 const store = useWorkoutStore()
+const isLoading = ref(true)
 
 onMounted(async () => {
+  while (!store.user) {
+    await new Promise(resolve => setTimeout(resolve, 50))
+  }
+
   if (store.user) await store.fetchWorkouts()
+  isLoading.value = false
 })
 
 const workouts = computed(() =>

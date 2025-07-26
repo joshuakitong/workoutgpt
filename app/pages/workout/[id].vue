@@ -1,6 +1,12 @@
 <template>
   <div class="text-white py-6 px-0 sm:px-6 max-w-64 sm:max-w-2xl mx-auto">
-    <div v-if="workout">
+    <div v-if="isLoading">
+      <div class="flex items-center justify-center mx-auto w-10 h-10 mt-20">
+        <div class="h-6 w-6 border-2 border-[#a2a9b0] border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    </div>
+    
+    <div v-else-if="workout">
       <h1 class="text-3xl font-bold mb-1">{{ workout.title }}</h1>
       <p class="text-sm text-gray-400 mt-4">
         Goals: {{ workout.goals.join(', ') }} | Duration: {{ workout.duration }} | Level: {{ workout.experience }}
@@ -36,49 +42,46 @@
         <h3 class="text-lg font-semibold mb-2">WorkoutGPT Notes</h3>
         <p class="text-sm text-gray-300">{{ workout.notes }}</p>
       </div>
-    </div>
+    
+      <div class="mt-8 flex flex-col sm:flex-row sm:justify-end gap-4 max-w-2xl ml-auto w-full">
+        <button
+          @click="discardWorkout"
+          v-if="!isSavedWorkout"
+          :disabled="regenerating"
+          class="w-full sm:w-auto px-5 py-2 rounded-full font-medium transition text-[#a2a9b0] hover:bg-[#353739] disabled:opacity-50 disabled:bg-transparent"
+        >
+          Discard
+        </button>
 
-    <div
-      v-if="workout"
-      class="mt-8 flex flex-col sm:flex-row sm:justify-end gap-4 max-w-2xl ml-auto w-full"
-    >
-      <button
-        @click="discardWorkout"
-        v-if="!isSavedWorkout"
-        :disabled="regenerating"
-        class="w-full sm:w-auto px-5 py-2 rounded-full font-medium transition text-[#a2a9b0] hover:bg-[#353739] disabled:opacity-50 disabled:bg-transparent"
-      >
-        Discard
-      </button>
+        <button
+          @click="showDeleteModal = true"
+          v-if="isSavedWorkout"
+          :disabled="regenerating"
+          class="w-full sm:w-auto px-5 py-2 rounded-full font-medium transition text-red-400 hover:bg-red-500 hover:text-white disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-red-400"
+        >
+          Delete
+        </button>
 
-      <button
-        @click="showDeleteModal = true"
-        v-if="isSavedWorkout"
-        :disabled="regenerating"
-        class="w-full sm:w-auto px-5 py-2 rounded-full font-medium transition text-red-400 hover:bg-red-500 hover:text-white disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-red-400"
-      >
-        Delete
-      </button>
+        <button
+          @click="regenerateWorkout"
+          class="w-full sm:w-auto px-5 py-2 rounded-full font-medium transition bg-yellow-500 hover:brightness-110 text-black disabled:opacity-50 disabled:hover:brightness-100"
+          :disabled="regenerating"
+        >
+          {{ regenerating ? 'Regenerating...' : 'Regenerate' }}
+        </button>
 
-      <button
-        @click="regenerateWorkout"
-        class="w-full sm:w-auto px-5 py-2 rounded-full font-medium transition bg-yellow-500 hover:brightness-110 text-black disabled:opacity-50 disabled:hover:brightness-100"
-        :disabled="regenerating"
-      >
-        {{ regenerating ? 'Regenerating...' : 'Regenerate' }}
-      </button>
-
-      <button
-        @click="saveWorkout"
-        :disabled="!(justGenerated || hasRegenerated) || regenerating || !store.user"
-        class="w-full sm:w-auto px-5 py-2 rounded-full font-medium transition bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:brightness-110 disabled:hover:brightness-100 text-white disabled:opacity-50"
-      >
-        {{store.user ? "Save" : "Sign in to Save"}}
-      </button><br />
+        <button
+          @click="saveWorkout"
+          :disabled="!(justGenerated || hasRegenerated) || regenerating || !store.user"
+          class="w-full sm:w-auto px-5 py-2 rounded-full font-medium transition bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:brightness-110 disabled:hover:brightness-100 text-white disabled:opacity-50"
+        >
+          {{store.user ? "Save" : "Sign in to Save"}}
+        </button><br />
+      </div>
     </div>
 
     <div v-else>
-      <p class="text-gray-400 text-center mt-20">No workout found. Please create one from the form first.</p>
+      <p class="text-gray-400 text-center mt-20">No workout found. Please create one from + New Workout.</p>
     </div>
   </div>
 
@@ -105,10 +108,19 @@ const workout = ref(null)
 const regenerating = ref(false)
 const hasRegenerated = ref(false)
 const isSavedWorkout = ref(false)
+const isLoading = ref(true)
 const showDeleteModal = ref(false)
 
-onMounted(() => {
-  const stored = store.workouts?.find(w => w.id === workoutId)
+onMounted(async () => {
+  while (!store.user) {
+    await new Promise(resolve => setTimeout(resolve, 50))
+  }
+
+  if (store.workouts.length === 0) {
+    await store.fetchWorkouts()
+  }
+
+  const stored = store.workouts.find(w => w.id === workoutId)
 
   if (stored) {
     workout.value = stored
@@ -117,9 +129,9 @@ onMounted(() => {
   } else if (store.currentWorkout?.id === workoutId) {
     workout.value = store.currentWorkout
     isSavedWorkout.value = false
-  } else {
-    router.replace('/')
   }
+
+  isLoading.value = false
 })
 
 const regenerateWorkout = async () => {
