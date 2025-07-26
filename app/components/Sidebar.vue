@@ -83,7 +83,7 @@
         >
           Recent
         </p>
-        <div v-if="isLoading">
+        <div v-if="isLoading && store.user">
           <div class="flex items-center justify-center mx-auto w-10 h-10">
             <div class="h-4 w-4 border-2 border-[#a2a9b0] border-t-transparent rounded-full animate-spin"></div>
           </div>

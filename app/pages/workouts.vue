@@ -10,23 +10,23 @@
     <div v-else-if="workouts.length">
       <ul class="space-y-4">
         <li
-          v-for="w in workouts"
-          :key="w.id"
+          v-for="workout in workouts"
+          :key="workout.id"
           class="bg-[#1e1e1e] p-4 rounded-xl border border-white/10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
         >
           <div>
-            <h2 class="text-xl font-semibold">{{ w.title }}</h2>
+            <h2 class="text-xl font-semibold">{{ workout.title }}</h2>
             <p class="text-sm text-gray-400 mt-1">
-              Goals: {{ w.goals?.join(', ') || w.primaryGoal }} <br />
-              Duration: {{ w.duration }} | Level: {{ w.experience }}
+              Goals: {{ workout.originalForm.primaryGoal }}{{ workout.originalForm.secondaryGoal ? ", " + workout.originalForm.secondaryGoal : "" }} <br />
+              Duration: {{ workout.originalForm.duration }} | Level: {{ workout.originalForm.experience }}
             </p>
             <p class="text-xs text-gray-500 mt-1">
-              Saved: {{ formatDate(w.createdAt || w.savedAt) }}
+              Saved: {{ formatDate(workout.createdAt || workout.savedAt) }}
             </p>
           </div>
 
           <RouterLink
-            :to="`/workout/${w.id}`"
+            :to="`/workout/${workout.id}`"
             class="px-4 py-2 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white rounded-full text-sm font-medium hover:brightness-110 transition"
           >
             View
@@ -61,6 +61,8 @@ onMounted(async () => {
 const workouts = computed(() =>
   [...store.workouts].sort((a, b) => new Date(b.savedAt) - new Date(a.savedAt))
 )
+
+console.log(workouts)
 
 const formatDate = (isoDate) => {
   if (!isoDate) return ''

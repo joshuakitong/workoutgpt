@@ -85,10 +85,23 @@ export const useWorkoutStore = defineStore('workout', () => {
     const workoutId = workout.id || doc(workoutsRef).id
 
     const docRef = doc(workoutsRef, workoutId)
+    const { title, segments, notes, originalForm } = workout
+
     const workoutWithMeta = {
-      ...workout,
       id: workoutId,
+      title,
+      segments,
+      notes,
       savedAt: new Date().toISOString(),
+      originalForm: {
+        primaryGoal: originalForm.primaryGoal,
+        secondaryGoal: originalForm.secondaryGoal,
+        targets: originalForm.targets,
+        equipment: originalForm.equipment,
+        duration: originalForm.duration,
+        experience: originalForm.experience,
+        notes: originalForm.notes,
+      }
     }
 
     await setDoc(docRef, workoutWithMeta)

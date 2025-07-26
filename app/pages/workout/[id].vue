@@ -9,15 +9,19 @@
     <div v-else-if="workout">
       <h1 class="text-3xl font-bold mb-1">{{ workout.title }}</h1>
       <p class="text-sm text-gray-400 mt-4">
-        Goals: {{ workout.goals.join(', ') }} | Duration: {{ workout.duration }} | Level: {{ workout.experience }}
+        Goals: {{ workout.originalForm.primaryGoal }}{{ workout.originalForm.secondaryGoal ? ", " + workout.originalForm.secondaryGoal : "" }} | Duration: {{ workout.originalForm.duration }} | Level: {{ workout.originalForm.experience }}
       </p>
 
       <p class="text-sm text-gray-400 mt-4">
-        Targets: {{ workout.targets.join(', ') }}
+        Targets: {{ workout.originalForm.targets.join(', ') }}
       </p>
 
       <p class="text-sm text-gray-400 my-4">
-        Equipment: {{ workout.equipment.join(', ') }}
+        Equipment: {{ workout.originalForm.equipment.join(', ') }}
+      </p>
+
+      <p class="text-sm text-gray-400 my-4">
+        User Notes: {{ workout.originalForm.notes }}
       </p>
 
       <div v-for="segment in workout.segments" :key="segment.title" class="mb-8">
@@ -112,11 +116,9 @@ const isLoading = ref(true)
 const showDeleteModal = ref(false)
 
 onMounted(async () => {
-  while (!store.user) {
-    await new Promise(resolve => setTimeout(resolve, 50))
-  }
+  store.initializeStore()
 
-  if (store.workouts.length === 0) {
+  if (store.user && store.workouts.length === 0) {
     await store.fetchWorkouts()
   }
 
@@ -147,11 +149,6 @@ const regenerateWorkout = async () => {
       id: workoutId,
       originalForm: workout.value.originalForm,
       title: workout.value.title,
-      goals: workout.value.goals,
-      targets: workout.value.targets,
-      equipment: workout.value.equipment,
-      experience: workout.value.experience,
-      duration: workout.value.duration,
       savedAt: new Date().toISOString()
     }
 
@@ -172,7 +169,7 @@ const discardWorkout = () => {
 
 const saveWorkout = async () => {
   if (!workout.value) return
-
+  console.log(workout.value)
   const updatedWorkout = {
     ...workout.value,
     savedAt: new Date().toISOString()

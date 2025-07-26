@@ -22,7 +22,13 @@
     <div v-if="started" class="flex flex-col justify-between min-h-[calc(100vh-6rem)] items-center px-4">
       <!-- Step Content -->
       <div class="flex-1 flex items-center justify-center w-full max-w-2xl">
-        <component :is="steps[currentStep]" v-model:form="form" />
+        <component v-if="!generating" :is="steps[currentStep]" v-model:form="form" />
+
+        <div v-else>
+          <div class="flex items-center justify-center mx-auto w-10 h-10">
+            <div class="h-6 w-6 border-2 border-[#a2a9b0] border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        </div>
       </div>
 
       <!-- Bottom Nav Buttons -->
