@@ -35,7 +35,7 @@
           <li
             v-for="exercise in segment.exercises"
             :key="exercise.name"
-            class="bg-[#1e1e1e] p-4 rounded-xl border border-white/10"
+            class="relative bg-[#1e1e1e] p-4 rounded-xl border border-white/10"
           >
             <div class="flex justify-between mb-1">
               <h3 class="text-lg font-semibold">{{ exercise.name }}</h3>
@@ -43,6 +43,23 @@
             </div>
             <p class="text-sm text-gray-300 mb-2">{{ exercise.description }}</p>
             <p class="text-xs text-gray-400 whitespace-pre-line">{{ exercise.instructions }}</p>
+            <!-- YouTube Icon Button -->
+            <a
+              :href="`https://www.youtube.com/results?search_query=${encodeURIComponent(exercise.name)}+exercise`"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="absolute bottom-3 right-3"
+              title="Search on YouTube"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-4" viewBox="0 0 48 32" fill="none">
+                <rect width="48" height="32" rx="16" fill="#FF0000" />
+
+                <path
+                  d="M19 10L32 16L19 22V10Z"
+                  fill="white"
+                />
+              </svg>
+            </a>
           </li>
         </ul>
       </div>
