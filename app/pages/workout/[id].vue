@@ -35,7 +35,7 @@
           <li
             v-for="exercise in segment.exercises"
             :key="exercise.name"
-            class="relative bg-[#1e1e1e] p-4 rounded-xl border border-white/10 hover:scale-105 hover:border-white/50 transition-all duration-300"
+            class="relative bg-[#1e1e1e] p-4 rounded-xl border border-white/10 hover:border-white/50 transition-all duration-300"
           >
             <div class="flex justify-between mb-1">
               <h3 class="text-lg font-semibold">{{ exercise.name }}</h3>
