@@ -54,9 +54,9 @@
         <div class="flex justify-between my-6 w-full max-w-2xl">
           <button
             @click="prevStep"
-            :disabled="currentStep === 0"
+            :disabled="currentStep === 0 || generating"
             :hidden="currentStep === 0"
-            class="px-5 py-2 rounded-full font-medium transition text-[#a2a9b0] hover:bg-[#353739] disabled:opacity-50"
+            class="px-5 py-2 rounded-full font-medium transition text-[#a2a9b0] hover:bg-[#353739] disabled:opacity-50 disabled:hover:bg-transparent"
           >
             Previous
           </button>
