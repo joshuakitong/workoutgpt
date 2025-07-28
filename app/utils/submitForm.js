@@ -17,7 +17,7 @@ You are a fitness coach. Based on the user's preferences, generate a one-session
         { 'name': 'Jumping Jacks',
           'reps': '2 x 30 sec',
           'description': 'Light cardio warm-up',
-          'instructions': '(1) Step 1, (2) Step 2, ...' }
+          'instructions': 'Stand with feet shoulder-width apart...' }
       ]
     },
     {
@@ -27,11 +27,11 @@ You are a fitness coach. Based on the user's preferences, generate a one-session
         { 'name': 'Bicep Curls',
           'reps': '3 x 10',
           'description': 'Upper body strength',
-          'instructions': '(1) Step 1, (2) Step 2, ...' },
+          'instructions': 'Stand with feet shoulder-width apart...' },
         { 'name': 'Squats',
           'reps': '3 x 10',
           'description': 'Lower body strength',
-          'instructions': '(1) Step 1, (2) Step 2, ...' }
+          'instructions': 'Stand with feet shoulder-width apart...' }
       ]
     },
     {
@@ -41,7 +41,7 @@ You are a fitness coach. Based on the user's preferences, generate a one-session
         { 'name': 'Stretch',
           'reps': '3 x 30 sec',
           'description': 'Recovery',
-          'instructions': '(1) Step 1, (2) Step 2, ...' }
+          'instructions': 'To stretch safely and effectively...' }
       ]
     }
   ],
