@@ -1,7 +1,7 @@
 <template>
   <div class="text-white py-6 px-0 sm:px-6 max-w-64 sm:max-w-2xl mx-auto">
     <h1 class="text-3xl font-bold mb-6">My Workouts</h1>
-    <div v-if="isLoading && store.user" class="space-y-4">
+    <div v-if="isLoading && store.userLoading" class="space-y-4">
       <SkeletonBox height="h-32" width="w-full" rounded="rounded-xl" />
       <SkeletonBox height="h-32" width="w-full" rounded="rounded-xl" />
       <SkeletonBox height="h-32" width="w-full" rounded="rounded-xl" />
