@@ -22,10 +22,11 @@
      <Transition @enter="onStepShowEnter">
       <div v-if="showStep" class="flex flex-col justify-between min-h-[calc(100vh-6rem)] items-center px-4">
         <!-- Step Content -->
-        <div class="w-full max-w-2xl h-2 mb-4 rounded-full bg-[#2a2a2a] overflow-hidden">
+        <div class="w-full max-w-2xl h-2 mb-4 rounded-full relative overflow-hidden">
+          <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"></div>
           <div
-            class="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 transition-all duration-1000"
-            :style="{ width: `${((currentStep + 1) / steps.length) * 100}%` }"
+            class="absolute top-0 right-0 h-full bg-[#2a2a2a] transition-all duration-1000"
+            :style="{ width: `${100 - ((currentStep + 1) / steps.length) * 100}%` }"
           ></div>
         </div>
         <Transition
