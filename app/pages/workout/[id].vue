@@ -25,7 +25,7 @@
         Equipment: {{ workout.originalForm.equipment.join(', ') }}
       </p>
 
-      <p class="text-sm text-gray-400 my-4">
+      <p v-if="workout.originalForm.notes" class="text-sm text-gray-400 my-4">
         User Notes: {{ workout.originalForm.notes }}
       </p>
 
