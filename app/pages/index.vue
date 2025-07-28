@@ -24,7 +24,7 @@
         <!-- Step Content -->
         <div class="w-full max-w-2xl h-2 mb-4 rounded-full bg-[#2a2a2a] overflow-hidden">
           <div
-            class="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 transition-all duration-500"
+            class="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 transition-all duration-1000"
             :style="{ width: `${((currentStep + 1) / steps.length) * 100}%` }"
           ></div>
         </div>
