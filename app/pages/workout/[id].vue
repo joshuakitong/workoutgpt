@@ -12,7 +12,47 @@
     </div>
     
     <div v-else-if="workout">
-      <h1 class="text-3xl font-bold mb-1">{{ workout.title }}</h1>
+      <div class="flex items-center justify-between w-full">
+        <div class="flex items-center gap-2">
+          <h1 v-if="!isRenaming" class="text-3xl font-bold mb-1">{{ workout.title }}</h1>
+          <div
+            v-else
+            class="flex flex-col sm:flex-row sm:items-center gap-2 w-full"
+          >
+            <input
+              v-model="editTitle"
+              :disabled="regenerating"
+              class="w-full sm:flex-1 max-w-sm bg-[#1e1e1e] rounded-full border border-gray-600 focus:outline-none focus:border-blue-500 px-4 py-1 text-white text-xl"
+            />
+            <div class="flex gap-2">
+              <button
+                @click="saveTitle"
+                :disabled="regenerating"
+                class="text-sm px-5 py-2 rounded-full bg-blue-500 text-white text-center hover:brightness-110 disabled:opacity-50 disabled:brightness-100"
+              >
+                Save
+              </button>
+              <button
+                @click="cancelRename"
+                :disabled="regenerating"
+                class="text-sm px-5 py-2 rounded-full font-medium transition text-[#a2a9b0] hover:bg-[#353739] disabled:opacity-50 disabled:bg-transparent"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="ml-auto">
+          <WorkoutOptionsMenu
+            v-if="isSavedWorkout && !justGenerated && !isRenaming"
+            :disabled="regenerating"
+            :workout="workout"
+            @startRename="startRename"
+            @confirmDelete="openDeleteModal"
+          />
+        </div>
+      </div>
       <p class="text-sm text-gray-400 mt-4">
         Goals: {{ workout.originalForm.primaryGoal }}{{ workout.originalForm.secondaryGoal ? ", " + workout.originalForm.secondaryGoal : "" }} | Duration: {{ workout.originalForm.duration }} | Level: {{ workout.originalForm.experience }}
       </p>
@@ -80,15 +120,6 @@
         </button>
 
         <button
-          @click="showDeleteModal = true"
-          v-if="isSavedWorkout"
-          :disabled="regenerating"
-          class="w-full sm:w-auto px-5 py-2 rounded-full font-medium transition text-red-400 hover:bg-red-500 hover:text-white disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-red-400"
-        >
-          Delete
-        </button>
-
-        <button
           @click="regenerateWorkout"
           class="w-full sm:w-auto px-5 py-2 rounded-full font-medium transition bg-yellow-500 hover:brightness-110 text-black disabled:opacity-50 disabled:hover:brightness-100"
           :disabled="regenerating"
@@ -113,8 +144,9 @@
 
   <DeleteConfirmationModal
     v-if="showDeleteModal"
+    :workout="workout"
     @cancel="showDeleteModal = false"
-    @confirm="confirmDeleteWorkout"
+    @confirm="confirmDelete"
   />
 </template>
 
@@ -123,7 +155,8 @@ import { useRoute, useRouter } from 'vue-router'
 import { useWorkoutStore } from '@/firebase/firebaseService'
 import { onMounted, ref } from 'vue'
 import { submitFormToGemini } from '@/utils/submitForm'
-import DeleteConfirmationModal from '~/components/workout/deleteConfirmationModal.vue'
+import WorkoutOptionsMenu from '@/components/workout/workoutOptionsMenu.vue'
+import DeleteConfirmationModal from '@/components/workout/deleteConfirmationModal.vue'
 import SkeletonBox from '@/components/SkeletonBox.vue'
 
 const route = useRoute()
@@ -137,6 +170,8 @@ const hasRegenerated = ref(false)
 const isSavedWorkout = ref(false)
 const isLoading = ref(true)
 const showDeleteModal = ref(false)
+const isRenaming = ref(false)
+const editTitle = ref('')
 
 onMounted(async () => {
   store.initializeStore()
@@ -159,7 +194,16 @@ onMounted(async () => {
   isLoading.value = false
 })
 
+watchEffect(() => {
+  if (workout.value && store.user && store.workouts.length > 0) {
+    isSavedWorkout.value = store.workouts.some(w => w.id === workout.value.id)
+  }
+})
+
 const regenerateWorkout = async () => {
+  isRenaming.value = false
+  editTitle.value = ''
+  
   if (!workout.value?.originalForm) return
 
   regenerating.value = true
@@ -203,7 +247,28 @@ const saveWorkout = async () => {
   router.push('/workouts')
 }
 
-const confirmDeleteWorkout = () => {
+const startRename = () => {
+  isRenaming.value = true
+  editTitle.value = workout.value.title
+}
+
+const cancelRename = () => {
+  isRenaming.value = false
+  editTitle.value = ''
+}
+
+const saveTitle = async () => {
+  if (!editTitle.value.trim()) return
+  workout.value.title = editTitle.value.trim()
+  isRenaming.value = false
+  await store.saveWorkout(workout.value)
+}
+
+const openDeleteModal = () => {
+  showDeleteModal.value = true
+}
+
+const confirmDelete = () => {
   if (!workout.value) return
 
   store.deleteWorkout(workout.value.id)
