@@ -191,7 +191,7 @@ onMounted(async () => {
 })
 
 const workouts = computed(() =>
-  [...store.workouts].sort((a, b) => new Date(b.savedAt || 0) - new Date(a.savedAt || 0)).slice(0, 5)
+  [...store.workouts].sort((a, b) => new Date(b.savedAt || 0) - new Date(a.savedAt || 0)).slice(0, 10)
 )
 
 const isWorkoutActive = (id) => route.path === `/workout/${id}`
