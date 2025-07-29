@@ -284,6 +284,8 @@ const animateSections = async () => {
   buttonsSection.value?.scrollIntoView({ behavior: 'smooth', block: 'center' })
   await gsap.from(buttonsSection.value, { opacity: 0, y: 20, duration: 0.5 })
   
+  await wait(50)
+  hasRegenerated.value = false
 }
 
 const setSegmentTitleRef = (el, index) => {
