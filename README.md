@@ -4,6 +4,16 @@ This is an AI workout generator built with **Nuxt.js**, **Tailwind CSS**, **GSAP
 
 Live: [View Site](https://workoutgpt-2d445.web.app)
 
+## Features:
+ - Responsive design
+ - Multi-step form wizard
+ - AI-generated workout plans
+ - Workout regeneration
+ - CRUD functionalities
+ - Smooth animations
+ - User authentication
+ - Workouts stored via Firebase Firestore
+
 <details>
   <summary><strong>How to Run Locally</strong></summary>
 
