@@ -13,7 +13,7 @@
           <li
             v-for="workout in workouts"
             :key="workout.id"
-            class="bg-[#1e1e1e] p-4 rounded-xl border border-white/10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:border-white/50 transition-all duration-300"
+            class="bg-[#1e1e1e] p-4 rounded-xl border border-white/10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:border-white/30"
           >
             <div>
               <h2 class="text-xl font-semibold">{{ workout.title }}</h2>
@@ -71,8 +71,6 @@ onMounted(async () => {
 const workouts = computed(() =>
   [...store.workouts].sort((a, b) => new Date(b.savedAt) - new Date(a.savedAt))
 )
-
-console.log(workouts)
 
 const formatDate = (isoDate) => {
   if (!isoDate) return ''
