@@ -234,12 +234,15 @@ watchEffect(() => {
   }
 })
 
+const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
+
 const animateSections = async () => {
-  if (!skipTitleAndDetails.value || !justGenerated) {
+  if (!skipTitleAndDetails.value) {
     showTitle.value = true
     await gsap.from(titleSection.value, { opacity: 0, y: 20, duration: 0.5 })
     showDetails.value = true
     await gsap.from(detailsSection.value, { opacity: 0, y: 20, duration: 0.5 })
+    await wait(50)
   } else {
     showTitle.value = true
     showDetails.value = true
@@ -250,7 +253,10 @@ const animateSections = async () => {
     if (segmentTitle) {
       shownSegmentTitles.value.push(s)
       await nextTick()
+      segmentTitle.scrollIntoView({ behavior: 'smooth', block: 'center' })
       await gsap.from(segmentTitle, { opacity: 0, y: 20, duration: 0.5 })
+      
+      await wait(50)
     }
 
     for (let e = 0; e < workout.value.segments[s].exercises.length; e++) {
@@ -259,16 +265,25 @@ const animateSections = async () => {
       await nextTick()
       const refItem = exerciseRefs.value.find(item => item.key === key)
       if (refItem?.el) {
+        refItem.el.scrollIntoView({ behavior: 'smooth', block: 'center' })
         await gsap.from(refItem.el, { opacity: 0, y: 20, duration: 0.5 })
+        await wait(50)
       }
     }
   }
 
   showNotes.value = true
+  await nextTick()
+  notesSection.value?.scrollIntoView({ behavior: 'smooth', block: 'center' })
   await gsap.from(notesSection.value, { opacity: 0, y: 20, duration: 0.5 })
+  
+  await wait(50)
 
   showButtons.value = true
+  await nextTick()
+  buttonsSection.value?.scrollIntoView({ behavior: 'smooth', block: 'center' })
   await gsap.from(buttonsSection.value, { opacity: 0, y: 20, duration: 0.5 })
+  
 }
 
 const setSegmentTitleRef = (el, index) => {
