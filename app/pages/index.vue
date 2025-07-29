@@ -44,9 +44,7 @@
               v-model:form="form"
             />
             <div v-else>
-              <div class="flex items-center justify-center mx-auto w-10 h-10">
-                <div class="h-6 w-6 border-2 border-[#a2a9b0] border-t-transparent rounded-full animate-spin"></div>
-              </div>
+              <BlobLoader />
             </div>
           </div>
         </Transition>
@@ -84,6 +82,7 @@ import focusTargets from '~/data/focusTargets.js'
 import equipmentOptions from '~/data/equipmentOptions.js'
 import { submitFormToGemini } from '@/utils/submitForm.js'
 import { useWorkoutStore } from '@/firebase/firebaseService'
+import BlobLoader from '~/components/BlobLoader.vue'
 import gsap from 'gsap'
 
 import Step1 from '~/components/wizard/Step1FitnessGoal.vue'
@@ -101,6 +100,7 @@ const currentStep = ref(0)
 const direction = ref('forward')
 const steps = [Step1, Step2, Step3, Step4, Step5, Step6]
 const generating = ref(false)
+const dotsContainer = ref(null)
 const router = useRouter()
 
 const form = reactive({
