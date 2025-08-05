@@ -125,7 +125,7 @@
       </template>
 
       <!-- Action Buttons -->
-      <div class="mt-8 flex flex-col sm:flex-row sm:justify-end gap-4 max-w-2xl ml-auto w-full"  ref="buttonsSection" v-show="!animating || showButtons">
+      <div v-if="!regenerating" class="mt-8 flex flex-col sm:flex-row sm:justify-end gap-4 max-w-2xl ml-auto w-full"  ref="buttonsSection" v-show="!animating || showButtons">
         <button
           @click="discardWorkout"
           v-if="!isSavedWorkout"
@@ -140,7 +140,7 @@
           class="w-full sm:w-auto px-5 py-2 rounded-full font-medium transition bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 hover:brightness-110 text-white disabled:opacity-50 disabled:hover:brightness-100"
           :disabled="regenerating"
         >
-          {{ regenerating ? 'Regenerating...' : 'Regenerate' }}
+          {{ 'Regenerate' }}
         </button>
 
         <button
