@@ -72,7 +72,7 @@
         </p>
       </div>
 
-      <div v-if="regenerating" class="flex justify-center my-10">
+      <div v-if="regenerating" class="blob-loader-animate flex justify-center my-10">
         <BlobLoader />
       </div>
 
@@ -361,15 +361,78 @@ const regenerateWorkout = async () => {
 
   if (!workout.value?.originalForm) return
 
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+  await wait(300)
+
+  const exitAnimations = []
+
+  for (const el of segmentTitleRefs.value) {
+    if (el) {
+      exitAnimations.push(gsap.to(el, {
+        opacity: 0,
+        y: 20,
+        filter: 'blur(2px)',
+        duration: 0.6,
+        ease: 'power2.inOut',
+      }))
+    }
+  }
+
+  for (const ref of exerciseRefs.value) {
+    if (ref?.el) {
+      exitAnimations.push(gsap.to(ref.el, {
+        opacity: 0,
+        y: 20,
+        filter: 'blur(2px)',
+        duration: 0.6,
+        ease: 'power2.inOut',
+      }))
+    }
+  }
+
+  if (notesSection.value) {
+    exitAnimations.push(gsap.to(notesSection.value, {
+      opacity: 0,
+      y: 20,
+      filter: 'blur(2px)',
+      duration: 0.6,
+      ease: 'power2.inOut',
+    }))
+  }
+
+  if (buttonsSection.value) {
+    exitAnimations.push(gsap.to(buttonsSection.value, {
+      opacity: 0,
+      y: 20,
+      filter: 'blur(2px)',
+      duration: 0.6,
+      ease: 'power2.inOut',
+    }))
+  }
+
+  await Promise.all(exitAnimations)
+
   regenerating.value = true
-  showTitle.value = true
-  showDetails.value = true
-  exerciseItems.length = 0
+  await nextTick()
+
+  const loader = document.querySelector('.blob-loader-animate')
+  if (loader) {
+    gsap.from(loader, {
+        opacity: 0,
+        filter: 'blur(2px)',
+        scale: 0.5,
+        duration: 1,
+        ease: 'power2.out'
+      })
+  
+  }
+
+  showNotes.value = false
+  showButtons.value = false
   segmentTitleRefs.value = []
   shownSegmentTitles.value = []
   exerciseRefs.value = []
   shownExercises.value = []
-  showNotes.value = false
 
   try {
     const regenerated = await submitFormToGemini(workout.value.originalForm)
@@ -388,8 +451,6 @@ const regenerateWorkout = async () => {
 
     regenerating.value = false
     skipTitleAndDetails.value = true
-    buttonsSection.value = []
-    showButtons.value = false
     await nextTick()
     animateSections()
 
