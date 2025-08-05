@@ -211,7 +211,7 @@ watch(
     ])
     form.equipment = form.equipment.filter((item) => allowedEquipment.has(item))
 
-    if (primary) {
+    if (primary && !form.equipment.includes('Bodyweight')) {
       form.equipment.unshift('Bodyweight')
     }
   },
