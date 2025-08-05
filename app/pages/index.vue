@@ -192,10 +192,12 @@ const onEnter = (el) => {
     el,
     {
       opacity: 0,
+      filter: 'blur(2px)',
       x: direction.value === 'forward' ? 100 : -100
     },
     {
       opacity: 1,
+      filter: 'blur(0px)',
       x: 0,
       duration: 0.7,
       ease: 'power2.out'
@@ -206,6 +208,7 @@ const onEnter = (el) => {
 const onLeave = (el, done) => {
   gsap.to(el, {
     opacity: 0,
+    filter: 'blur(2px)',
     x: direction.value === 'forward' ? -100 : 100,
     duration: 0.3,
     ease: 'power2.in',
@@ -216,6 +219,7 @@ const onLeave = (el, done) => {
 const onButtonsLeave = (el, done) => {
   gsap.to(el, {
     opacity: 0,
+    filter: 'blur(2px)',
     y: 20,
     duration: 0.7,
     ease: 'power2.inOut',
@@ -231,6 +235,7 @@ const onProgressLeave = (el, done) => {
     scaleX: 0,
     transformOrigin: 'center center',
     opacity: 0,
+    filter: 'blur(2px)',
     duration: 0.7,
     ease: 'power2.inOut',
     onComplete: done
@@ -243,6 +248,7 @@ watch(showLoader, async (val) => {
     if (loader.value) {
       gsap.from(loader.value, {
         opacity: 0,
+        filter: 'blur(2px)',
         scale: 0.5,
         duration: 1,
         ease: 'power2.out'
