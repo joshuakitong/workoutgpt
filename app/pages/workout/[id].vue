@@ -239,9 +239,24 @@ const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
 const animateSections = async () => {
   if (!skipTitleAndDetails.value) {
     showTitle.value = true
-    await gsap.from(titleSection.value, { opacity: 0, y: 20, duration: 0.5 })
+    await gsap.from(titleSection.value, {
+      opacity: 0,
+      y: 20,
+      filter: 'blur(2px)',
+      duration: 0.7,
+      ease: 'power2.out',
+      clearProps: 'filter'
+    })
     showDetails.value = true
-    await gsap.from(detailsSection.value, { opacity: 0, y: 20, duration: 0.5 })
+    await gsap.from(detailsSection.value, {
+      opacity: 0,
+      y: 20,
+      filter: 'blur(2px)',
+      duration: 0.7,
+      ease: 'power2.out',
+      clearProps: 'filter'
+    })
+
     await wait(50)
   } else {
     showTitle.value = true
@@ -254,7 +269,14 @@ const animateSections = async () => {
       shownSegmentTitles.value.push(s)
       await nextTick()
       segmentTitle.scrollIntoView({ behavior: 'smooth', block: 'center' })
-      await gsap.from(segmentTitle, { opacity: 0, y: 20, duration: 0.5 })
+      await gsap.from(segmentTitle, {
+        opacity: 0,
+        y: 20,
+        filter: 'blur(2px)',
+        duration: 0.7,
+        ease: 'power2.out',
+        clearProps: 'filter'
+      })
       
       await wait(50)
     }
@@ -266,7 +288,15 @@ const animateSections = async () => {
       const refItem = exerciseRefs.value.find(item => item.key === key)
       if (refItem?.el) {
         refItem.el.scrollIntoView({ behavior: 'smooth', block: 'center' })
-        await gsap.from(refItem.el, { opacity: 0, y: 20, duration: 0.5 })
+        await gsap.from(refItem.el, {
+          opacity: 0,
+          y: 20,
+          filter: 'blur(2px)',
+          duration: 0.7,
+          ease: 'power2.out',
+          clearProps: 'filter'
+        })
+
         await wait(50)
       }
     }
@@ -275,14 +305,28 @@ const animateSections = async () => {
   showNotes.value = true
   await nextTick()
   notesSection.value?.scrollIntoView({ behavior: 'smooth', block: 'center' })
-  await gsap.from(notesSection.value, { opacity: 0, y: 20, duration: 0.5 })
+  await gsap.from(notesSection.value, {
+    opacity: 0,
+    y: 20,
+    filter: 'blur(2px)',
+    duration: 0.7,
+    ease: 'power2.out',
+    clearProps: 'filter'
+  })
   
   await wait(50)
 
   showButtons.value = true
   await nextTick()
   buttonsSection.value?.scrollIntoView({ behavior: 'smooth', block: 'center' })
-  await gsap.from(buttonsSection.value, { opacity: 0, y: 20, duration: 0.5 })
+  await gsap.from(buttonsSection.value, {
+    opacity: 0,
+    y: 20,
+    filter: 'blur(2px)',
+    duration: 0.7,
+    ease: 'power2.out',
+    clearProps: 'filter'
+  })
   
   await wait(50)
   hasRegenerated.value = false
