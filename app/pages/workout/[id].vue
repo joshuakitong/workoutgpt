@@ -105,12 +105,12 @@
                 :href="`https://www.youtube.com/results?search_query=${encodeURIComponent(exercise.name)}+exercise`"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="absolute bottom-3 right-3"
+                class="absolute bottom-3 right-3 group"
                 title="Search on YouTube"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-4" viewBox="0 0 48 32" fill="none">
-                  <rect width="48" height="32" rx="16" fill="#FF0000" />
-                  <path d="M19 10L32 16L19 22V10Z" fill="white" />
+                  <rect width="48" height="32" rx="16" class="fill-gray-500 group-hover:fill-red-600 transition-colors duration-300" />
+                  <path d="M19 10L32 16L19 22V10Z" class="fill-white" />
                 </svg>
               </a>
             </li>
