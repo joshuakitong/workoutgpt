@@ -100,7 +100,6 @@ const currentStep = ref(0)
 const direction = ref('forward')
 const steps = [Step1, Step2, Step3, Step4, Step5, Step6]
 const generating = ref(false)
-const dotsContainer = ref(null)
 const router = useRouter()
 
 const form = reactive({
