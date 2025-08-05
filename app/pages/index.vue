@@ -22,13 +22,19 @@
      <Transition @enter="onStepShowEnter">
       <div v-if="showStep" class="flex flex-col justify-between min-h-[calc(100vh-6rem)] items-center px-4">
         <!-- Step Content -->
-        <div class="w-full max-w-2xl h-2 mb-4 rounded-full relative overflow-hidden">
-          <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"></div>
+        <Transition name="progress" @leave="onProgressLeave">
           <div
-            class="absolute top-0 right-0 h-full bg-[#2a2a2a] transition-all duration-1000"
-            :style="{ width: `${100 - ((currentStep + 1) / steps.length) * 100}%` }"
-          ></div>
-        </div>
+            v-if="!generating"
+            class="w-full max-w-2xl h-2 mb-4 rounded-full relative overflow-hidden"
+            ref="progress"
+          >
+            <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"></div>
+            <div
+              class="absolute top-0 right-0 h-full bg-[#2a2a2a] transition-all duration-1000"
+              :style="{ width: `${100 - ((currentStep + 1) / steps.length) * 100}%` }"
+            ></div>
+          </div>
+        </Transition>
         <Transition
           mode="out-in"
           @enter="onEnter"
@@ -43,32 +49,41 @@
               :is="steps[currentStep]"
               v-model:form="form"
             />
-            <div v-else>
+            <div v-else-if="generating && showLoader" ref="loader">
               <BlobLoader />
             </div>
           </div>
         </Transition>
       
         <!-- Bottom Nav Buttons -->
-        <div class="flex justify-between my-6 w-full max-w-2xl">
-          <button
-            @click="prevStep"
-            :disabled="currentStep === 0 || generating"
-            :hidden="currentStep === 0"
-            class="px-5 py-2 rounded-full font-medium transition text-[#a2a9b0] hover:bg-[#353739] disabled:opacity-50 disabled:hover:bg-transparent"
+        <Transition
+          name="buttons"
+          @leave="onButtonsLeave"
+        >
+          <div
+            v-if="!generating"
+            class="flex justify-between my-6 w-full max-w-2xl"
+            ref="buttons"
           >
-            Previous
-          </button>
-          <div :hidden="currentStep !== 0"></div>
-          <button
-            @click="nextStep"
-            :disabled="!canContinue || generating"
-            class="px-5 py-2 rounded-full font-medium transition bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:brightness-110 text-white disabled:opacity-50 disabled:hover:brightness-100"
-          >
-            <span v-if="currentStep !== 5">Next</span>
-            <span v-else>{{ generating ? 'Generating...' : 'Submit' }}</span>
-          </button>
-        </div>
+            <button
+              @click="prevStep"
+              :disabled="currentStep === 0"
+              :hidden="currentStep === 0"
+              class="px-5 py-2 rounded-full font-medium transition text-[#a2a9b0] hover:bg-[#353739] disabled:opacity-50 disabled:hover:bg-transparent"
+            >
+              Previous
+            </button>
+            <div :hidden="currentStep !== 0"></div>
+            <button
+              @click="nextStep"
+              :disabled="!canContinue"
+              class="px-5 py-2 rounded-full font-medium transition bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:brightness-110 text-white disabled:opacity-50 disabled:hover:brightness-100"
+            >
+              <span v-if="currentStep !== 5">Next</span>
+              <span v-else>Submit</span>
+            </button>
+          </div>
+        </Transition>
       </div>
     </Transition>
   </div>
@@ -99,7 +114,11 @@ const showStep = ref(false)
 const currentStep = ref(0)
 const direction = ref('forward')
 const steps = [Step1, Step2, Step3, Step4, Step5, Step6]
+const progress = ref(null)
+const buttons = ref(null)
+const loader = ref(null)
 const generating = ref(false)
+const showLoader = ref(false)
 const router = useRouter()
 
 const form = reactive({
@@ -140,9 +159,8 @@ const nextStep = async () => {
 
       router.push({ path: `/workout/${id}`, query: { justGenerated: 'true' } })
     } catch (err) {
-      console.error('Submit failed:', err)
-    } finally {
       generating.value = false
+      console.error('Submit failed:', err)
     }
   }
 }
@@ -194,6 +212,44 @@ const onLeave = (el, done) => {
     onComplete: done
   })
 }
+
+const onButtonsLeave = (el, done) => {
+  gsap.to(el, {
+    opacity: 0,
+    y: 20,
+    duration: 0.7,
+    ease: 'power2.inOut',
+    onComplete: () => {
+      showLoader.value = true
+      done()
+    }
+  })
+}
+
+const onProgressLeave = (el, done) => {
+  gsap.to(el, {
+    scaleX: 0,
+    transformOrigin: 'center center',
+    opacity: 0,
+    duration: 0.7,
+    ease: 'power2.inOut',
+    onComplete: done
+  })
+}
+
+watch(showLoader, async (val) => {
+  if (val) {
+    await nextTick()
+    if (loader.value) {
+      gsap.from(loader.value, {
+        opacity: 0,
+        scale: 0.5,
+        duration: 1,
+        ease: 'power2.out'
+      })
+    }
+  }
+})
 
 watch(
   () => [form.primaryGoal, form.secondaryGoal],
