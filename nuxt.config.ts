@@ -6,6 +6,7 @@ export default defineNuxtConfig({
   modules: ['@nuxtjs/tailwindcss', '@pinia/nuxt'],
   app: {
     baseURL: '/',
+    pageTransition: { name: 'page', mode: 'out-in' }
   },
   nitro: {
     preset: 'firebase',
@@ -26,5 +27,5 @@ export default defineNuxtConfig({
       FIREBASE_MESSAGING_SENDER_ID: process.env.NUXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
       FIREBASE_APP_ID: process.env.NUXT_PUBLIC_FIREBASE_APP_ID,
     }
-  }
+  },
 })
