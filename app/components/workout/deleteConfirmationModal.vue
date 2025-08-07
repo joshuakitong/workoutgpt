@@ -1,13 +1,13 @@
 <template>
   <div
-    class="fixed inset-0 bg-black/60 flex items-center justify-center z-50"
+    class="fixed inset-0 bg-black/60 backdrop-blur-[2px] flex items-center justify-center z-50"
     @keydown.esc="$emit('cancel')"
     tabindex="0"
   >
     <div class="bg-[#1e1e1e] border border-white/10 p-6 rounded-xl w-[90%] max-w-sm text-white">
       <h2 class="text-xl font-semibold mb-4">Delete Workout?</h2>
       <p class="text-sm text-gray-300 mb-6">
-        This will permanently delete the workout. Are you sure?
+        This will permanently delete the <strong class="text-white">"{{ workout.title }}"</strong>. Are you sure?
       </p>
 
       <div class="flex justify-end gap-4">
@@ -30,4 +30,10 @@
 
 <script setup>
 defineEmits(['confirm', 'cancel'])
+defineProps({
+  workout: {
+    type: Object,
+    required: true
+  }
+})
 </script>
