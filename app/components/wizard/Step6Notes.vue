@@ -1,8 +1,8 @@
 <template>
-  <div class="w-full max-w-2xl space-y-6 mx-auto">
+  <div class="form-step-container">
     <div>
-      <h2 class="text-2xl font-bold text-center">Any notes or preferences?</h2>
-      <p class="text-center text-sm text-[#a2a9b0] mt-2">(Optional)</p>
+      <h2 class="form-step-title">Any notes or preferences?</h2>
+      <p class="form-step-subtitle">(Optional)</p>
     </div>
     <div>
       <textarea

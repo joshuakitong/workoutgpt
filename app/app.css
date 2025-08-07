@@ -33,8 +33,24 @@
   @apply text-sm text-gray-400 my-4;
 }
 
+.form-step-container {
+  @apply w-full max-w-2xl space-y-8 mx-auto;
+}
+
+.form-step-title {
+  @apply text-2xl font-bold text-center;
+}
+
+.form-step-subtitle {
+  @apply text-center text-sm text-[#a2a9b0] mt-2;
+}
+
 .button {
   @apply px-5 py-2 rounded-full font-medium transition;
+}
+
+.form-button {
+  @apply py-3 px-4 rounded-full font-semibold border transition-all duration-300 truncate;
 }
 
 .dot {

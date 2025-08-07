@@ -1,10 +1,10 @@
 <template>
-  <div class="w-full max-w-2xl space-y-8 mx-auto">
+  <div class="form-step-container">
     <div>
-      <h2 class="text-2xl font-bold text-center">
+      <h2 class="form-step-title">
         What do you want to focus on?
       </h2>
-      <p class="text-center text-sm text-[#a2a9b0] mt-2">(Select at least 1)</p>
+      <p class="form-step-subtitle">(Select at least 1)</p>
     </div>
 
     <div v-if="combinedOptions.length" class="grid grid-cols-2 sm:grid-cols-3 gap-4">
@@ -13,7 +13,7 @@
         :key="option"
         @click="toggleTarget(option)"
         :class="[
-          'py-3 px-4 rounded-full font-semibold border transition truncate',
+          'py-3 px-4 rounded-full font-semibold border transition-all duration-300 truncate',
           isSelected(option)
             ? selectedClass(option)
             : [

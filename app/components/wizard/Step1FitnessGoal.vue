@@ -1,12 +1,12 @@
 <template>
-  <div class="w-full max-w-2xl space-y-8 mx-auto">
+  <div class="form-step-container">
     <div>
-      <h2 class="text-2xl font-bold text-center">
+      <h2 class="form-step-title">
         What is your
         <span class="text-blue-300">primary</span> and
         <span class="text-pink-300">secondary</span> fitness goal?
       </h2>
-      <p class="text-center text-sm text-[#a2a9b0] mt-2">(Select 1–2)</p>
+      <p class="form-step-subtitle">(Select 1–2)</p>
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -16,7 +16,7 @@
         @click="toggleGoal(option)"
         :disabled="!isSelected(option) && isMaxSelected"
         :class="[
-          'py-3 px-4 rounded-full font-semibold border transition truncate',
+          'py-3 px-4 rounded-full font-semibold border transition-all duration-300 truncate',
           isSelected(option)
             ? selectedClass(option)
             : [
