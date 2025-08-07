@@ -122,7 +122,7 @@
           </p>
           <button
             @click="signIn"
-            class="text-sm font-medium mt-2 px-4 py-2 rounded-full text-blue-500 hover:bg-[#ddd] hover:bg-[#353739] transition"
+            class="text-sm mt-2 button text-blue-500 hover:bg-[#ddd] hover:bg-[#353739]"
           >
             Sign In
           </button>
@@ -139,7 +139,7 @@
     <button
       v-else-if="!store.user"
       @click="signIn"
-      class="hidden sm:block px-4 py-2 rounded-full bg-blue-500 hover:brightness-110 text-white text-sm font-medium shadow transition"
+      class="hidden sm:block button bg-blue-500 hover:brightness-110 text-white text-sm shadow"
     >
       Sign In
     </button>
@@ -154,7 +154,7 @@
         />
       </button>
       <div
-        class="absolute -top-12 -right-10 sm:top-auto sm:right-0 py-2 px-4 bg-[#353739] border border-white/10 rounded-full shadow-md text-sm text-white whitespace-nowrap opacity-0 group-hover:opacity-100 hover:brightness-110 transition duration-200 z-50"
+        class="absolute -top-12 -right-10 sm:top-auto sm:right-0 button bg-[#353739] border border-white/10 shadow-md text-sm text-white whitespace-nowrap opacity-0 group-hover:opacity-100 hover:brightness-110 duration-200 z-50"
       >
         <button @click="signOut" class="text-left">Logout</button>
       </div>

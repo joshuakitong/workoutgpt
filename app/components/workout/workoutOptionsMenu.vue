@@ -28,13 +28,13 @@
       >
         <button
           @click="handleRename"
-          class="block w-full px-5 py-2 rounded-full bg-blue-500 text-left px-4 py-2 text-sm text-white text-center shadow-md hover:brightness-110"
+          class="block w-full button bg-blue-500 text-left text-sm text-white text-center shadow-md hover:brightness-110"
         >
           Rename
         </button>
         <button
           @click="handleDelete"
-          class="block w-full px-5 py-2 rounded-full mt-2 bg-red-500 text-left px-4 py-2 text-sm text-white text-center shadow-md hover:brightness-110"
+          class="block w-full button mt-2 bg-red-500 text-left text-sm text-white text-center shadow-md hover:brightness-110"
         >
           Delete
         </button>
