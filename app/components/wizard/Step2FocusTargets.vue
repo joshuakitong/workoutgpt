@@ -7,7 +7,7 @@
       <p class="form-step-subtitle">(Select at least 1)</p>
     </div>
 
-    <div v-if="combinedOptions.length" class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
       <button
         v-for="option in combinedOptions"
         :key="option"
@@ -25,10 +25,6 @@
         {{ option }}
       </button>
     </div>
-
-    <p v-else class="text-center text-gray-500">
-      Please select a fitness goal first.
-    </p>
   </div>
 </template>
 
