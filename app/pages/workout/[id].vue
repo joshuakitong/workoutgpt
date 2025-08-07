@@ -1,5 +1,5 @@
 <template>
-  <div class="text-white py-6 px-0 sm:px-6 max-w-64 sm:max-w-2xl mx-auto">
+  <div class="page-container">
     <div v-if="isLoading" class="space-y-4">
       <SkeletonBox height="h-10" width="w-full" rounded="rounded-md" />
       <SkeletonBox height="h-4" width="w-4/5" rounded="rounded-md" />
@@ -28,14 +28,14 @@
             <button
               @click="saveTitle"
               :disabled="regenerating"
-              class="text-sm px-5 py-2 rounded-full bg-blue-500 text-white text-center hover:brightness-110 disabled:opacity-50 disabled:brightness-100"
+              class="text-sm button bg-blue-500 text-white text-center hover:brightness-110 disabled:opacity-50 disabled:brightness-100"
             >
               Save
             </button>
             <button
               @click="cancelRename"
               :disabled="regenerating"
-              class="text-sm px-5 py-2 rounded-full font-medium transition text-[#a2a9b0] hover:bg-[#353739] disabled:opacity-50 disabled:bg-transparent"
+              class="text-sm button text-[#a2a9b0] hover:bg-[#353739] disabled:opacity-50 disabled:bg-transparent"
             >
               Cancel
             </button>
@@ -55,19 +55,19 @@
 
       <!-- Section 2: Details -->
       <div ref="detailsSection" v-show="!animating || showDetails || regenerating">
-        <p class="text-sm text-gray-400 mt-4">
+        <p class="workout-details">
           Goals: {{ workout.originalForm.primaryGoal }}{{ workout.originalForm.secondaryGoal ? ", " + workout.originalForm.secondaryGoal : "" }} | Duration: {{ workout.originalForm.duration }} | Level: {{ workout.originalForm.experience }}
         </p>
 
-        <p class="text-sm text-gray-400 mt-4">
+        <p class="workout-details">
           Targets: {{ workout.originalForm.targets.join(', ') }}
         </p>
 
-        <p class="text-sm text-gray-400 my-4">
+        <p class="workout-details">
           Equipment: {{ workout.originalForm.equipment.join(', ') }}
         </p>
 
-        <p v-if="workout.originalForm.notes" class="text-sm text-gray-400 my-4">
+        <p v-if="workout.originalForm.notes" class="workout-details">
           User Notes: {{ workout.originalForm.notes }}
         </p>
       </div>
@@ -93,7 +93,7 @@
               :key="`${sIndex}-${eIndex}`"
               v-show="!animating || shownExercises.includes(`${sIndex}-${eIndex}`)"
               :ref="el => setExerciseRefs(el, sIndex, eIndex)"
-              class="relative bg-[#1e1e1e] p-4 rounded-xl border border-white/10 hover:border-white/30"
+              class="relative workout-container"
             >
               <div class="flex justify-between mb-1">
                 <h3 class="text-lg font-semibold">{{ exercise.name }}</h3>
@@ -130,14 +130,14 @@
           @click="discardWorkout"
           v-if="!isSavedWorkout"
           :disabled="regenerating"
-          class="w-full sm:w-auto px-5 py-2 rounded-full font-medium transition text-[#a2a9b0] hover:bg-[#353739] disabled:opacity-50 disabled:bg-transparent"
+          class="w-full sm:w-auto button text-[#a2a9b0] hover:bg-[#353739] disabled:opacity-50 disabled:hover:bg-transparent"
         >
           Discard
         </button>
 
         <button
           @click="regenerateWorkout"
-          class="w-full sm:w-auto px-5 py-2 rounded-full font-medium transition bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 hover:brightness-110 text-white disabled:opacity-50 disabled:hover:brightness-100"
+          class="w-full sm:w-auto button bg-rgb-r text-white hover:brightness-110 disabled:hover:brightness-100 disabled:opacity-50"
           :disabled="regenerating"
         >
           {{ 'Regenerate' }}
@@ -146,7 +146,7 @@
         <button
           @click="saveWorkout"
           :disabled="!(justGenerated || isLocalNewerThanBackend) || regenerating || !store.user"
-          class="w-full sm:w-auto px-5 py-2 rounded-full font-medium transition bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:brightness-110 disabled:hover:brightness-100 text-white disabled:opacity-50"
+          class="w-full sm:w-auto button bg-rgb text-white hover:brightness-110 disabled:hover:brightness-100 disabled:opacity-50"
         >
           {{store.user ? "Save" : "Sign in to Save"}}
         </button>

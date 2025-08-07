@@ -2,7 +2,7 @@
   <div class="min-h-screen text-white flex flex-col">
     <!-- Header -->
     <h1
-      class="text-4xl font-bold bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent transition-all duration-500"
+      class="text-4xl font-bold bg-rgb bg-clip-text text-transparent transition-all duration-500"
       :class="started ? 'mx-auto my-6 z-40 text-2xl' : 'mx-auto mt-[40vh]'"
     >
       WorkoutGPT
@@ -12,7 +12,7 @@
     <div v-if="!started" class="mx-auto mt-8">
       <button
         @click="start"
-        class="px-6 py-3 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:brightness-110 rounded-full font-semibold text-white transition"
+        class="px-6 py-3 bg-rgb hover:brightness-110 rounded-full font-semibold text-white transition"
       >
         New Workout
       </button>
@@ -28,7 +28,7 @@
             class="w-full max-w-2xl h-2 mb-4 rounded-full relative overflow-hidden"
             ref="progress"
           >
-            <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"></div>
+            <div class="absolute top-0 left-0 w-full h-full bg-rgb"></div>
             <div
               class="absolute top-0 right-0 h-full bg-[#2a2a2a] transition-all duration-1000"
               :style="{ width: `${100 - ((currentStep + 1) / steps.length) * 100}%` }"
@@ -69,7 +69,7 @@
               @click="prevStep"
               :disabled="currentStep === 0"
               :hidden="currentStep === 0"
-              class="px-5 py-2 rounded-full font-medium transition text-[#a2a9b0] hover:bg-[#353739] disabled:opacity-50 disabled:hover:bg-transparent"
+              class="button text-[#a2a9b0] hover:bg-[#353739] disabled:opacity-50 disabled:hover:bg-transparent"
             >
               Previous
             </button>
@@ -77,7 +77,7 @@
             <button
               @click="nextStep"
               :disabled="!canContinue"
-              class="px-5 py-2 rounded-full font-medium transition bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:brightness-110 text-white disabled:opacity-50 disabled:hover:brightness-100"
+              class="button bg-rgb hover:brightness-110 text-white disabled:opacity-50 disabled:hover:brightness-100"
             >
               <span v-if="currentStep !== 5">Next</span>
               <span v-else>Submit</span>
