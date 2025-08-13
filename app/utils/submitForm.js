@@ -69,7 +69,11 @@ Respond only with valid JSON.
   const data = await res.json()
   const { content } = data
 
-  if (!content) throw new Error('No content returned from Gemini')
+  if (!content) {
+    const noContentError = 'No content returned from Gemini API';
+    alert(noContentError);
+    throw new Error(noContentError);
+  }
 
   // Remove markdown-style code blocks (```json ... ```)
   const match = content.match(/```json\s*([\s\S]*?)```/i)
